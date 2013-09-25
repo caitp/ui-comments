@@ -1,0 +1,11 @@
+language: node_js
+node_js:
+  - 0.10
+  - 0.9
+  - 0.8
+before_script:
+  - export DISPLAY=:99.0
+  - sh -e /etc/init.d/xvfb start
+
+script:
+  - ./node_modules/grunt-karma/node_modules/karma/bin/karma start --browsers PhantomJS --browsers Firefox --single-run
