@@ -4,9 +4,10 @@ node_js:
   - 0.9
   - 0.8
 before_script:
+  - npm install -g grunt-cli
   - export DISPLAY=:99.0
   - sh -e /etc/init.d/xvfb start
 
 script:
-  - ./node_modules/.bin/grunt build
+  - grunt build
   - ./node_modules/.bin/karma start --browsers PhantomJS --browsers Firefox --single-run
