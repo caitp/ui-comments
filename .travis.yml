@@ -8,4 +8,5 @@ before_script:
   - sh -e /etc/init.d/xvfb start
 
 script:
+  - ./node_modules/.bin/grunt build
   - ./node_modules/.bin/karma start --browsers PhantomJS --browsers Firefox --single-run
