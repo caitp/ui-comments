@@ -1,8 +1,6 @@
-##UI-Comments
+##UI-Comments [![Build Status](https://travis-ci.org/caitp/ui-comments.png?branch=master)](https://travis-ci.org/caitp/ui-comments) [![devDependency Status](https://david-dm.org/caitp/ui-comments/dev-status.png?branch=master)](https://david-dm.org/caitp/ui-comments#info=devDependencies)
 
 ###Nested, Reddit-style comments directives for AngularJS
-
-[![Build Status](https://travis-ci.org/caitp/ui-comments.png?branch=master)](https://travis-ci.org/caitp/ui-comments)
 
 Comments are all over the internet these days. It's often not in anyone's best interest to read them, and yet sometimes they offer a certain whimsical charm and hilarity, or otherwise engage you in pop-culture in ways that you'd otherwise miss.
 
