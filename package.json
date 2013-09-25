@@ -24,8 +24,8 @@
     "grunt-html2js": "~0.1.7",
     "grunt-karma": "~0.7.1",
     "node-markdown": "~0.1.1",
-    "semver": "~1.1.4",
-    "shelljs": "~0.1.4",
-    "grunt-ngmin": "0.0.3"
+    "grunt-ngmin": "0.0.3",
+    "semver": "~2.1.0",
+    "shelljs": "~0.2.6"
   }
 }
