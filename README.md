@@ -1,6 +1,6 @@
-#UI-Comments
+##UI-Comments
 
-##Nested, Reddit-style comments directives for AngularJS
+###Nested, Reddit-style comments directives for AngularJS
 
 [![Build Status](https://travis-ci.org/caitp/ui-comments.png?branch=master)](https://travis-ci.org/caitp/ui-comments)
 
@@ -10,7 +10,7 @@ Angular directives can make engineering comment systems very simple, and `$http`
 
 The intention of this library is to serve as a simple helper, and perhaps as an example, for a reddit-style comment system, built on two very simple AngularJS directives.
 
-##Development
+###Development
 
 Building the code is a super-simple exercise:
 
@@ -45,7 +45,7 @@ Hopefully everything is passing!
 
 Note that it is nice to have a global installation of `karma`, however if this is not available, one can use `./node_modules/grunt-karma/node_modules/karma/bin/karma` instead. That's somewhat more verbose, however!
 
-##Contributing
+###Contributing
 
 It would be super cool if this project is actually useful to people, and I know that for what it is currently, there are a lot of things that could be improved on, which I'm not totally sure how to do in a nice way.
 
@@ -56,7 +56,7 @@ It would be super cool if this project is actually useful to people, and I know 
 
 So there are lots of things to do, and it would be just awesome if people could help improve them. But, even if people only ever use it as an example for generating nested AngularJS directives, that's fine too. I really just wrote this for fun, but I hope that people can get some use out of it as well.
 
-##License
+###License
 
 The MIT License (MIT)
 
