@@ -1,4 +1,8 @@
-#UI-Comments: AngularJS Comments widget
+#UI-Comments
+
+##Nested, Reddit-style comments directives for AngularJS
+
+[![Build Status](https://travis-ci.org/caitp/ui-comments.png?branch=master)](https://travis-ci.org/caitp/ui-comments)
 
 Comments are all over the internet these days. It's often not in anyone's best interest to read them, and yet sometimes they offer a certain whimsical charm and hilarity, or otherwise engage you in pop-culture in ways that you'd otherwise miss.
 
