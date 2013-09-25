@@ -8,6 +8,10 @@
   },
   "author": "Caitlin Potter <snowball@defpixel.com>",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/caitp/ui-comments.git"
+  },
   "devDependencies": {
     "grunt": "~0.4.1",
     "grunt-ngdocs": "~0.1.7",
