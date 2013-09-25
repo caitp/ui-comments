@@ -36,8 +36,10 @@ $ karma run
 ```
 
 3. Alternatively, you can utilize `--single-run` to start the server, execute tests and quit immediately:
+
 ```bash
 $ karma start [desired --browsers] --single-run
+```
 
 Hopefully everything is passing!
 
