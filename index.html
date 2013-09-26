@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html ng-app="commentsDemo">
+  <head>
+    <title>UI-Comments for AngularJS</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/app.css">
+  </head>
+  <body ng-controller="DemoCtrl">
+    <header>
+      <nav id="navbar" class="navbar navbar-inverse navbar-fixed-top">
+        <div class="navbar-header">
+          <a href="#" class="navbar-brand" title="UI Comments">UI Comments</a>
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-list">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+        </div>
+        <div id="navbar-list" class="container collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li><a href="https://github.com/caitp/ui-comments" title="Code on Github" class="icon-2x icon-github"></a></li>
+            <li><a href="https://twitter.com/share" title="Share on Twitter" class="icon-2x icon-twitter" data-lang="en"></a></li>
+          </ul>
+        </div>
+      </nav>
+      <div class="jumbotron">
+        <div class="container">
+          <h1>UI Comments</h1>
+
+          <p>Nested, Reddit-style comments directives for <strong><a href="http://angularjs.org">AngularJS</a></strong></p>
+          <p>Customizable comment templates, customizable comment controllers, and built-in support for nesting and sorting comments. It's just lovely stuff, innit.</p>
+          <p class="btn-group">
+            <a class="icon icon-github btn btn-default" href="https://github.com/caitp/ui-comments">
+              Code on Github</a>
+            <a class="icon icon-download-alt icon-white btn btn-primary" href="https://github.com/caitp/ui-comments/tree/gh-pages">
+              Download <small>(0.0.3)</small></a>
+          </p>
+        </div>
+      </div>
+    </header>
+    <div class="container">
+      <comments comment-data="data.comments"></comments>
+    </div>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/angular.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/moment.min.js"></script>
+    <script src="ui-comments-0.0.3.js"></script>
+    <script src="js/app.js"></script>
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+  </body>
+</html>
