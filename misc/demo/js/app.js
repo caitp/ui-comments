@@ -14,7 +14,7 @@ angular.module("views/comment.html", []).run(["$templateCache", function($templa
     "  <div class=\"row\">\n" +
     "    <div class=\"container comment-body\" ng-bind=\"comment.text\"></div>\n" +
     "  </div>\n" +
-    "  <child-comments comment-data=\"comment.children\"></child-comments>\n" +
+    "  <button ng-if=\"comment.children\" class=\"btn btn-default glyphicon glyphicon-plus\" ng-click=\"collapse()\">Toggle Child Comments</button>" +
     "</div>");
 }]);
 
@@ -28,9 +28,19 @@ angular.module("views/comments.html", []).run(["$templateCache", function($templ
 
 angular.module('commentsDemo', ['views/comments.html', 'views/comment.html', 'ui.comments'])
 
-.constant('commentsConfig', {
-  containerTemplate: 'views/comments.html',
-  commentTemplate: 'views/comment.html'
+.config(function(commentsConfigProvider) {
+  commentsConfigProvider.set({
+    containerTemplate: 'views/comments.html',
+    commentTemplate: 'views/comment.html',
+    commentController: 'CommentCtrl'
+  });
+})
+
+.controller('CommentCtrl', function($scope) {
+  $scope.collapse = function() {
+    var comments = $($scope.$element[0]).children('.comments');
+    comments.collapse('toggle');
+  };
 })
 
 .controller('DemoCtrl', function($scope) {
