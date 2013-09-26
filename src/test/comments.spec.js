@@ -1,24 +1,35 @@
 describe('ui.comments', function() {
   var $scope, $document, $body, $compile, comments;
+  beforeEach(function() {
+    angular.module('testModule', [
+      'ui.comments.directive',
+      'template/comments/comments.html',
+      'template/comments/comment.html'
+    ])
+    .controller('TestCtrl1', function($scope) {
+      $scope.controllerName = "TestCtrl1";
+    })
+    .controller('TestCtrl2', function($scope) {
+      $scope.controllerName = "TestCtrl2";
+    });
+    angular.forEach([
+      'testModule',
+      'ui.comments.directive',
+      'template/comments/comments.html',
+      'template/comments/comment.html',
+    ], function(m) {
+      module(m);
+    });
+  
+    inject(function(_$rootScope_, _$document_, _$compile_) {
+      $scope = _$rootScope_;
+      $document = _$document_;
+      $compile = _$compile_;
+      $body = $document.find('body');
+    });
+  });
 
   describe('DOM', function() {
-    beforeEach(function() {
-      angular.forEach([
-        'ui.comments.directive',
-        'template/comments/comments.html',
-        'template/comments/comment.html',
-      ], function(m) {
-        module(m);
-      });
-    
-      inject(function(_$rootScope_, _$document_, _$compile_) {
-        $scope = _$rootScope_;
-        $document = _$document_;
-        $compile = _$compile_;
-        $body = $document.find('body');
-      });
-    });
-
     describe('top-level comments', function() {
       beforeEach(function() {
         $scope.comments = [];
@@ -106,29 +117,35 @@ describe('ui.comments', function() {
     });
   });
 
+  describe('events', function() {
+    it('fires `comments.filled` when child comments become available', function() {
+      $scope.comments = [{children: []}];
+      comments = $compile(angular.element('<comments comment-data="comments"></comments>'))($scope);
+      $scope.$digest();
+      var parent = comments.find('.comment').first(),
+          callback = jasmine.createSpy('commentsFilled');
+      parent.bind('comments.filled', callback);
+      $scope.comments[0].children = [{}];
+      $scope.$digest();
+      expect(callback).toHaveBeenCalled();
+    });
+    it('fires `comments.emptied` when child comments are no longer available', function() {
+      $scope.comments = [{children: [{}]}];
+      comments = $compile(angular.element('<comments comment-data="comments"></comments>'))($scope);
+      $scope.$digest();
+      var parent = comments.find('.comment').first(),
+          callback = jasmine.createSpy('commentsEmptied');
+      parent.bind('comments.emptied', callback);
+      $scope.comments[0].children = [];
+      $scope.$digest();
+      expect(callback).toHaveBeenCalled();
+    });
+  });
+
   describe('custom comment controller', function() {
-    var app, commentsConfig;
-    beforeEach(function() {
-      app = angular.module('customController', ['ui.comments.directive'])
-      .controller('TestCtrl1', function($scope) {
-        $scope.controllerName = "TestCtrl1";
-      })
-      .controller('TestCtrl2', function($scope) {
-        $scope.controllerName = "TestCtrl2";
-      });
-      angular.forEach([
-        'customController',
-        'template/comments/comments.html',
-        'template/comments/comment.html',
-      ], function(m) {
-        module(m);
-      });
-    
-      inject(function(_$rootScope_, _$document_, _$compile_, _commentsConfig_) {
-        $scope = _$rootScope_;
-        $document = _$document_;
-        $compile = _$compile_;
-        $body = $document.find('body');
+    var commentsConfig;
+    beforeEach(function() {    
+      inject(function(_commentsConfig_) {
         commentsConfig = _commentsConfig_;
       });
       $scope.comments = [{}];

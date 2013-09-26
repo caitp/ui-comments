@@ -123,16 +123,17 @@ angular.module('ui.comments.directive', [])
           if (angular.isArray(data) && data.length > 0 && !children) {
             compiled = $compile(sub)(scope);
             scope.$element.append(compiled);
+            scope.$element.triggerHandler('comments.filled');
             children = true;
           } else if((!angular.isArray(data) || !data.length) && children) {
             children = false;
-            compiled.scope().$destroy();
             compiled.remove();
             compiled = undefined;
+            scope.$element.triggerHandler('comments.emptied');
           }
         }
 
-        scope.$watch(attr.commentData, function(newval) {
+        scope.$watchCollection(attr.commentData, function(newval) {
           scope.comment = newval;
           update(scope.comment.children);
         });
