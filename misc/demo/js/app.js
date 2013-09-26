@@ -37,8 +37,17 @@ angular.module('commentsDemo', ['views/comments.html', 'views/comment.html', 'ui
 })
 
 .controller('CommentCtrl', function($scope) {
+  var children;
+  $scope.$element.bind('filled.comments', collapse);
+  $scope.$on('$destroy', function() {
+    $scope.$element.unbind('filled.comments', collapse);
+  });
+  function collapse(e, childComments) {
+    children = $(childComments);
+    children.collapse('hide');
+  }
   $scope.collapse = function() {
-    $scope.$element.children('.comments').collapse('toggle');
+    children.collapse('toggle');
   };
 })
 
