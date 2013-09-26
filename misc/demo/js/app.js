@@ -38,8 +38,7 @@ angular.module('commentsDemo', ['views/comments.html', 'views/comment.html', 'ui
 
 .controller('CommentCtrl', function($scope) {
   $scope.collapse = function() {
-    var comments = $($scope.$element[0]).children('.comments');
-    comments.collapse('toggle');
+    $scope.$element.children('.comments').collapse('toggle');
   };
 })
 
