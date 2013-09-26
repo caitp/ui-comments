@@ -10,10 +10,48 @@ angular.module('ui.comments.directive', [])
 // url     The URL for a user profile
 //
 
-.constant('commentsConfig', {
-  containerTemplate: 'template/comments/comments.html',
-  commentTemplate: 'template/comments/comment.html',
-  orderBy: 'best'
+.provider('commentsConfig', function() {
+  var config = {
+    containerTemplate: 'template/comments/comments.html',
+    commentTemplate: 'template/comments/comment.html',
+    orderBy: 'best',
+    commentController: undefined
+  };
+  var emptyController = function() {};
+  function stringSetter(setting, value) {
+    if (typeof value === 'string') {
+      config[setting] = value;
+    }
+  }
+  function controllerSetter(setting, value) {
+    if (value && typeof value === 'string' ||
+        typeof value === 'function' ||
+        angular.isArray(value)) {
+      config[setting] = value;
+    } else {
+      config[setting] = emptyController;
+    }
+  }
+  
+  var setters = {
+    'containerTemplate': stringSetter,
+    'commentTemplate': stringSetter,
+    'orderBy': stringSetter,
+    'commentController': controllerSetter
+  };
+  this.$get = function() {
+    return config;
+  };
+  this.set = function(name, value) {
+    if (typeof name === 'string') {
+      var fn = setters[name];
+      if (fn) {
+        fn(name, value);
+      }
+    } else if (typeof name === 'object') {
+      angular.forEach(name, this.set);
+    }
+  };
 })
 
 .directive('comments', function($compile, commentsConfig) {
@@ -22,7 +60,7 @@ angular.module('ui.comments.directive', [])
     require: '?^comment',
     transclude: true,
     replace: true,
-    templateUrl: commentsConfig.containerTemplate,
+    templateUrl: function() { return commentsConfig.containerTemplate; },
     scope: true,
     controller: function($scope) {},
     compile: function() {
@@ -32,7 +70,7 @@ angular.module('ui.comments.directive', [])
         scope.$watchCollection(attr.commentData, function(newval, oldval) {
           scope.self.commentData = angular.isArray(newval) ? newval : [];
         });
-        scope.$watch(attr.orderBy, function(newval, oldval) {
+        attr.$observe('orderBy', function(newval, oldval) {
           scope.self.commentOrder = newval || commentsConfig.orderBy;
         });
       };
@@ -46,15 +84,30 @@ angular.module('ui.comments.directive', [])
     restrict: 'EA',
     transclude: true,
     replace: true,
-    templateUrl: commentsConfig.commentTemplate,
-    compile: function() {
+    templateUrl: function() { return commentsConfig.commentTemplate; },
+    controller: function($scope, $controller, commentsConfig) {
+      var unregister = $scope.$watch('$element', function($element) {
+        unregister();
+        unregister = undefined;
+        $scope.$element = undefined;
+        var controller = commentsConfig.commentController,
+            controllerInstance;
+        if (controller) {
+          controllerInstance = $controller(controller, {
+            '$scope': $scope
+          });
+          $element.data('$commentController', controllerInstance);
+        }
+      });
+    },
+    compile: function(scope, elem) {
       return function(scope, elem, attr, comments) {
         if (elem.parent().attr('child-comments') === 'true') {
           elem.addClass('child-comment');
         }
         scope.comment = scope.$eval(attr.commentData);
         var children = false;
-
+        scope.$element = elem;
         function update(data) {
           if (angular.isArray(data) && data.length > 0 && !children) {
             var e = angular.element;
