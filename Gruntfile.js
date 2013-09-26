@@ -178,7 +178,7 @@ module.exports = function(grunt) {
       ],
       'release-complete': [
         'git commit CHANGELOG.md package.json -m "chore(release): v%version%"',
-        'git tag %version%'
+        'git tag v%version%'
       ],
       'release-start': [
         'grunt version:minor:"SNAPSHOT"',
