@@ -12,6 +12,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-conventional-changelog');
   grunt.loadNpmTasks('grunt-ngdocs');
   grunt.loadNpmTasks('grunt-ngmin');
+  grunt.loadNpmTasks('grunt-gh-pages');
 
   // Project configuration.
   grunt.util.linefeed = '\n';
@@ -182,7 +183,8 @@ module.exports = function(grunt) {
       ],
       'release-start': [
         'grunt version:minor:"SNAPSHOT"',
-        'git commit package.json -m "chore(release): Starting v%version%"'
+        'git commit package.json -m "chore(release): Starting v%version%"',
+        'grunt gh-pages'
       ]
     },
     ngmin: {
@@ -208,6 +210,16 @@ module.exports = function(grunt) {
       api: {
         src: ["src/**/*.js", "src/**/*.ngdoc"],
         title: "API Documentation"
+      }
+    },
+    'gh-pages': {
+      'gh-pages': {
+        options: {
+          base: '<%= dist %>',
+          repo: 'https://github.com/caitp/ui-comments.git',
+          message: 'gh-pages v<%= pkg.version %>'
+        },
+        src: ['**/*']
       }
     }
   });
