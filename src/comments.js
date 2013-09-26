@@ -122,14 +122,17 @@ angular.module('ui.comments.directive', [])
         function update(data) {
           if (angular.isArray(data) && data.length > 0 && !children) {
             compiled = $compile(sub)(scope);
-            scope.$element.append(compiled);
-            scope.$element.triggerHandler('comments.filled');
-            children = true;
+            var w = scope.$watch('$$phase', function(newval) {
+              w();
+              scope.$element.append(compiled);
+              scope.$element.triggerHandler('filled.comments', compiled);
+              children = true;
+            });
           } else if((!angular.isArray(data) || !data.length) && children) {
             children = false;
             compiled.remove();
             compiled = undefined;
-            scope.$element.triggerHandler('comments.emptied');
+            scope.$element.triggerHandler('emptied.comments');
           }
         }
 

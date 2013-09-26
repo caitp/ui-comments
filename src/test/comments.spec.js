@@ -124,18 +124,19 @@ describe('ui.comments', function() {
       $scope.$digest();
       var parent = comments.find('.comment').first(),
           callback = jasmine.createSpy('commentsFilled');
-      parent.bind('comments.filled', callback);
+      parent.bind('filled.comments', callback);
       $scope.comments[0].children = [{}];
       $scope.$digest();
-      expect(callback).toHaveBeenCalled();
+      expect(callback).toHaveBeenCalledWith(jasmine.any(Object), jasmine.any(HTMLDivElement));
     });
+
     it('fires `comments.emptied` when child comments are no longer available', function() {
       $scope.comments = [{children: [{}]}];
       comments = $compile(angular.element('<comments comment-data="comments"></comments>'))($scope);
       $scope.$digest();
       var parent = comments.find('.comment').first(),
           callback = jasmine.createSpy('commentsEmptied');
-      parent.bind('comments.emptied', callback);
+      parent.bind('emptied.comments', callback);
       $scope.comments[0].children = [];
       $scope.$digest();
       expect(callback).toHaveBeenCalled();
