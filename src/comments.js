@@ -43,13 +43,21 @@ angular.module('ui.comments.directive', [])
     return config;
   };
   this.set = function(name, value) {
+    var fn, key, props, i;
     if (typeof name === 'string') {
-      var fn = setters[name];
+      fn = setters[name];
       if (fn) {
         fn(name, value);
       }
     } else if (typeof name === 'object') {
-      angular.forEach(name, this.set);
+      props = Object.keys(name);
+      for(i=0; i<props.length; ++i) {
+        key = props[i];
+        fn = setters[key];
+        if (fn) {
+          fn(key, name[key]);
+        }
+      }
     }
   };
 })
@@ -89,14 +97,15 @@ angular.module('ui.comments.directive', [])
       var unregister = $scope.$watch('$element', function($element) {
         unregister();
         unregister = undefined;
-        $scope.$element = undefined;
         var controller = commentsConfig.commentController,
             controllerInstance;
         if (controller) {
           controllerInstance = $controller(controller, {
             '$scope': $scope
           });
-          $element.data('$commentController', controllerInstance);
+          if (controllerInstance) {
+            $element.data('$commentController', controllerInstance);
+          }
         }
       });
     },
@@ -106,19 +115,20 @@ angular.module('ui.comments.directive', [])
           elem.addClass('child-comment');
         }
         scope.comment = scope.$eval(attr.commentData);
-        var children = false;
+        var children = false, compiled, sub =
+        angular.element('<comments child-comments="true" ' +
+                        'comment-data="comment.children"></comments>');
         scope.$element = elem;
         function update(data) {
           if (angular.isArray(data) && data.length > 0 && !children) {
-            var e = angular.element;
-            elem.append(
-              e('<comments child-comments="true" comment-data="comment.children"></comments>')
-            );
-            elem = $compile(elem)(scope);
+            compiled = $compile(sub)(scope);
+            scope.$element.append(compiled);
             children = true;
           } else if((!angular.isArray(data) || !data.length) && children) {
             children = false;
-            elem.html('');
+            compiled.scope().$destroy();
+            compiled.remove();
+            compiled = undefined;
           }
         }
 
