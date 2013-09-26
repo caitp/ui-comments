@@ -13,6 +13,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-ngdocs');
   grunt.loadNpmTasks('grunt-ngmin');
   grunt.loadNpmTasks('grunt-gh-pages');
+  grunt.loadNpmTasks('grunt-contrib-connect');
 
   // Project configuration.
   grunt.util.linefeed = '\n';
@@ -204,11 +205,14 @@ module.exports = function(grunt) {
           'docs/css/style.css'
         ],
         navTemplate: 'docs/nav.html',
-        title: 'ui-comments',
+        title: 'UI Comments',
+        image: 'logo.png',
+        imageLink: 'http://caitp.github.io/ui-comments',
+        titleLink: 'http://caitp.github.io/ui-comments',
         html5Mode: false
       },
       api: {
-        src: ["src/**/*.js", "src/**/*.ngdoc"],
+        src: ["src/comments.js", "src/**/*.ngdoc"],
         title: "API Documentation"
       }
     },
@@ -220,6 +224,15 @@ module.exports = function(grunt) {
           message: 'gh-pages v<%= pkg.version %>'
         },
         src: ['**/*']
+      }
+    },
+    connect: {
+      docs: {
+        options: {
+          port: process.env.PORT || '3000',
+          base: '<%= dist %>/docs',
+          keepalive: true
+        }
       }
     }
   });
@@ -410,7 +423,7 @@ module.exports = function(grunt) {
       .concat(srcFiles)
       .concat(tpljsFiles));
 
-    grunt.task.run(['concat', 'ngmin', 'uglify']);
+    grunt.task.run(['concat', 'ngmin', 'uglify', 'ngdocs']);
   });
 
   return grunt;
