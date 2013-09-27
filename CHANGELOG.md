@@ -1,3 +1,18 @@
+<a name="v0.0.7"></a>
+### v0.0.7 (2013-09-27)
+
+
+#### Bug Fixes
+
+* **release:**
+  * gh-pages add, don't delete old content. ([2ba46417](http://github.com/caitp/ui-comments/commit/2ba464175bea2993347b3c9bb7e514d2b6117dc5))
+  * gh-pages before SNAPSHOT, and ignore SNAPSHOT ([49dca37b](http://github.com/caitp/ui-comments/commit/49dca37b7fd2d82ada4efc70ac63f034b7f1e21f))
+
+
+#### Features
+
+* **docs:** Setup GA on API docs and demo ([0a125574](http://github.com/caitp/ui-comments/commit/0a12557419cee244f33722664afd1fe2dc95882a))
+
 <a name="v0.0.6"></a>
 ### v0.0.6 (2013-09-26)
 
