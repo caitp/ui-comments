@@ -1,3 +1,14 @@
+<a name="v0.0.6"></a>
+### v0.0.6 (2013-09-26)
+
+
+#### Bug Fixes
+
+* **release:**
+  * Cleanup test build before release ([1305a435](http://github.com/caitp/ui-comments/commit/1305a435f702398cc9836e9fa5c5322663ea942e))
+  * Generate gh-pages for correct version. ([01805f25](http://github.com/caitp/ui-comments/commit/01805f2516b5c0d62716b582f2cf02f6e9b8b395))
+  * gh-pages before SNAPSHOT, and ignore SNAPSHOT ([54ae7b2d](http://github.com/caitp/ui-comments/commit/54ae7b2dae85be06c014b2a0040c06e1edaac820))
+
 <a name="v0.0.5"></a>
 ### v0.0.5 (2013-09-26)
 
