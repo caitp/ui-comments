@@ -14,6 +14,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-ngmin');
   grunt.loadNpmTasks('grunt-gh-pages');
   grunt.loadNpmTasks('grunt-contrib-connect');
+  grunt.loadNpmTasks('grunt-contrib-clean');
 
   // Project configuration.
   grunt.util.linefeed = '\n';
@@ -175,6 +176,7 @@ module.exports = function(grunt) {
       // <%= pkg.version is only evaluated once
       'release-prepare': [
         'grunt before-test after-test',
+        'grunt clean:dist',
         'grunt version', // remove "-SNAPSHOT"
         'grunt before-test after-test',
         'grunt docgen:%version%',
@@ -234,6 +236,11 @@ module.exports = function(grunt) {
           base: '<%= dist %>/docs',
           keepalive: true
         }
+      }
+    },
+    clean: {
+      dist: {
+        src: ['<%= dist %>', 'dist']
       }
     }
   });
