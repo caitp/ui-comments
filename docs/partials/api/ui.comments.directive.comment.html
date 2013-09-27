@@ -1,0 +1,54 @@
+<h1><code ng:non-bindable="">comment</code>
+<span class="hint">(directive in module <code ng:non-bindable="">ui.comments</code>
+)</span>
+</h1>
+<div><h2 id="Description">Description</h2>
+<div class="description"><p>The <a href="#/api/ui.comments.directive:comment">comment</a> directive is primarily used automatically by
+the <a href="#/api/ui.comments.directive:comments">comments</a> directive, by automatically
+building comment directives for each element in the collection.</p>
+
+<p>When a <a href="#/api/ui.comments.commentsConfig#commentController">commentController</a> is specified in
+<a href="#/api/ui.comments.commentsConfig">commentsConfig</a>, it is instantiated for each comment. The
+comment data is exposed to scope through <a href="#/api/ui.comments.directive:comment">comment</a>, and so
+templates may access comment properties through expressions like <code>comment.text</code>.</p>
+
+<p>An example template might look like the following:
+<pre class="prettyprint linenums">
+&lt;div class="comment"&gt;
+  &lt;div class="comment-header"&gt;
+   &lt;a class="comment-avatar"
+      ng-href="{{comment.profileUrl}}"&gt;
+     &lt;img ng-src="{{comment.avatarUrl}}"
+          alt="{{comment.name}}" /&gt;
+   &lt;/a&gt;
+   &lt;a class="comment-username"
+      ng-href="{{comment.profileUrl}}"
+      title="{{comment.username}}"&gt;{{comment.name}}&lt;/a&gt;
+    &lt;span class="comment-date"&gt;{{comment.date | timeAgo}}&lt;/span&gt;
+  &lt;/div&gt;
+  &lt;div class="comment-body" ng-bind="comment.text"&gt;&lt;/div&gt;
+&lt;/div&gt;
+</pre>
+
+<p><strong>IMPORANT</strong>: Do <strong>not</strong> use the <a href="#/api/ui.comments.directive:comments">comments</a> directive in a
+<a href="#/api/ui.comments.commentsConfig#commentTemplate">commentTemplate</a>. This will cause an
+infinite <a href="http://docs.angularjs.org/api/ng.$compile">$compile</a> loop, and eat a lot of
+memory.</p></div>
+<h2 id="Usage">Usage</h2>
+<div class="usage">as element:<pre class="prettyprint linenums">&lt;comment
+       comment-data="{expression}"&gt;
+&lt;/comment&gt;</pre>
+as attribute<pre class="prettyprint linenums">&lt;div comment
+     comment-data="{expression}"&gt;
+   ...
+&lt;/div&gt;</pre>
+<h3 id="Directive.info">Directive info</h3>
+<div class="directive-info"><ul><li>This directive creates new scope.</li>
+</ul>
+</div>
+<h3 id="Parameters">Parameters</h3>
+<ul class="parameters"><li><code ng:non-bindable="">comment-data – {expression} – </code>
+<p>Data model containing the specific comment.</p></li>
+</ul>
+</div>
+</div>

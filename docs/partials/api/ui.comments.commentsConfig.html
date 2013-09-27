@@ -1,0 +1,80 @@
+<h1><code ng:non-bindable="">commentsConfig</code>
+<span class="hint">(service in module <code ng:non-bindable="">ui.comments</code>
+)</span>
+</h1>
+<div><h2 id="Description">Description</h2>
+<div class="description"><p>The commentsConfig service offers a provider which may be injected
+into config blocks:</p>
+
+<pre class="prettyprint linenums">
+angular.module('example', ['ui.comments'])
+.config(function(commentsConfig) {
+  commentsConfig.set('commentController', 'MyController');
+  commentsConfig.set({
+    containerTemplate: 'my/custom/views/comments.html'
+  });
+});
+</pre>
+
+<p>Injected as a service, it is simply the configuration object in its current state.</p>
+
+<p>It is wise not to write to the service outside of config blocks, because the
+<code>set()</code> method provides some safety checks to ensure that only valid values are
+written. It should not be necessary for an application to inject commentsConfig anywhere
+except config blocks.</p></div>
+<div class="member method"><h2 id="Methods">Methods</h2>
+<ul class="methods"><li><h3 id="set">set(name, value)</h3>
+<div class="set"><p><em>When injected into a config block</em>, this method allows the manipulate the comments
+configuration.</p>
+
+<p>This method performs validation and only permits the setting of known properties, and
+will only set values of acceptable types. Further validation, such as detecting whether or
+not a controller is actually registered, is not performed.</p><h4 id="Parameters">Parameters</h4>
+<ul class="parameters"><li><code ng:non-bindable="">name – {string|object} – </code>
+<p>Either the name of the property to be accessed, or an object
+containing keys and values to extend the configuration with.</p></li>
+<li><code ng:non-bindable="">value – {*} – </code>
+<p>The value to set the named key to. Its type depends on the
+property being set.</p></li>
+</ul>
+<h4 id="Returns">Returns</h4>
+<div class="returns"><code ng:non-bindable="">{undefined}</code>
+– <p>Currently, this method is not chainable.</p></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="member property"><h2 id="Properties">Properties</h2>
+<ul class="properties"><li><h3 id="commentController">commentController</h3>
+<div class="commentcontroller"><p>Custom controller to be instantiated for each comment. The instantiated controller is
+given the property <code>$element</code> in scope. This allows the instantiated controller
+to bind to comment events.</p>
+
+<p>The controller may be specified either as a registered controller (string), a function,
+or by array notation.</p></div>
+</li>
+<li><h3 id="commentTemplate">commentTemplate</h3>
+<div class="commenttemplate"><p>The template URL for a single comment. Support for inline templates is not yet
+available, and so this must be a valid URL or cached ng-template</p>
+
+<p>If this template manually includes a <a href="#/api/ui.comments.directive:comments">comments</a>
+directive, it will result in an infinite $compile loop. Instead,
+<a href="#/api/ui.comments.directive:comment">comment</a> generates child collections programmatically.
+Currently, these are simply appended to the body of the comment.</p>
+
+<p><strong>TODO</strong>: Support customization of entry point for child comment collections.</p></div>
+</li>
+<li><h3 id="containerTemplate">containerTemplate</h3>
+<div class="containertemplate"><p>The template URL for collections of comments. Support for inline templates is not yet
+available, and so this must be a valid URL or cached ng-template</p></div>
+</li>
+<li><h3 id="orderBy">orderBy</h3>
+<div class="orderby"><p>Presently, this configuration item is not actually used.</p>
+
+<p><strong>TODO</strong>: Its intended purpose is to provide a default comment ordering rule. However,
+currently there is no machinery for ordering templates at all. This is intended for a later
+release.</p></div>
+</li>
+</ul>
+</div>
+</div>
