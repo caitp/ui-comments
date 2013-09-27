@@ -2,6 +2,8 @@
 
 ###Nested, Reddit-style comments directives for AngularJS
 
+#####[Demo](http://caitp.github.io/ui-comments/) | [Docs](http://caitp.github.io/ui-comments/docs)
+
 Comments are all over the internet these days. It's often not in anyone's best interest to read them, and yet sometimes they offer a certain whimsical charm and hilarity, or otherwise engage you in pop-culture in ways that you'd otherwise miss.
 
 Angular directives can make engineering comment systems very simple, and `$http`, `$resource`, or similar tools can vastly simplify the population of comment data.
