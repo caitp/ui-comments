@@ -14,13 +14,14 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-ngmin');
   grunt.loadNpmTasks('grunt-gh-pages');
   grunt.loadNpmTasks('grunt-contrib-connect');
+  grunt.loadNpmTasks('grunt-contrib-clean');
 
   // Project configuration.
   grunt.util.linefeed = '\n';
-
+  var pkg = grunt.file.readJSON('package.json');
   grunt.initConfig({
     modules: [],
-    pkg: grunt.file.readJSON('package.json'),
+    pkg: pkg,
     dist: 'dist',
     filename: 'ui-comments',
     meta: {
@@ -175,13 +176,15 @@ module.exports = function(grunt) {
       // <%= pkg.version is only evaluated once
       'release-prepare': [
         'grunt before-test after-test',
+        'grunt clean:dist',
         'grunt version', // remove "-SNAPSHOT"
-        'grunt changelog'
+        'grunt before-test after-test',
+        'grunt docgen:%version%',
+        'grunt changelog',
       ],
       'release-complete': [
         'git commit CHANGELOG.md package.json -m "chore(release): v%version%"',
         'git tag v%version%',
-        'grunt gh-pages'
       ],
       'release-start': [
         'grunt version:patch:"SNAPSHOT"',
@@ -233,6 +236,11 @@ module.exports = function(grunt) {
           base: '<%= dist %>/docs',
           keepalive: true
         }
+      }
+    },
+    clean: {
+      dist: {
+        src: ['<%= dist %>', 'dist']
       }
     }
   });
@@ -424,6 +432,15 @@ module.exports = function(grunt) {
       .concat(tpljsFiles));
 
     grunt.task.run(['concat', 'ngmin', 'uglify', 'ngdocs']);
+  });
+
+  grunt.registerTask('docgen', function() {
+    var self = this;
+    if (typeof self.args[0] === 'string') {
+      console.log(self.args[0]);
+      grunt.config('pkg.version', self.args[0]);
+    }
+    grunt.task.mark().run('gh-pages');
   });
 
   return grunt;
