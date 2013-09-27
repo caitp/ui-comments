@@ -17,10 +17,10 @@ module.exports = function(grunt) {
 
   // Project configuration.
   grunt.util.linefeed = '\n';
-
+  var pkg = grunt.file.readJSON('package.json');
   grunt.initConfig({
     modules: [],
-    pkg: grunt.file.readJSON('package.json'),
+    pkg: pkg,
     dist: 'dist',
     filename: 'ui-comments',
     meta: {
@@ -176,8 +176,9 @@ module.exports = function(grunt) {
       'release-prepare': [
         'grunt before-test after-test',
         'grunt version', // remove "-SNAPSHOT"
+        'grunt before-test after-test',
+        'grunt docgen:%version%',
         'grunt changelog',
-        'grunt gh-pages'
       ],
       'release-complete': [
         'git commit CHANGELOG.md package.json -m "chore(release): v%version%"',
@@ -276,7 +277,7 @@ module.exports = function(grunt) {
     self.data.forEach(function(cmd) {
       cmd = cmd.replace('%version%', grunt.file.readJSON('package.json').version);
       grunt.log.ok(cmd);
-      var result = sh.exec(cmd, {silent: true });
+      var result = sh.exec(cmd, {silent: false });
       if (result.code !== 0) {
         grunt.fatal(result.output);
       }
@@ -424,6 +425,15 @@ module.exports = function(grunt) {
       .concat(tpljsFiles));
 
     grunt.task.run(['concat', 'ngmin', 'uglify', 'ngdocs']);
+  });
+
+  grunt.registerTask('docgen', function() {
+    var self = this;
+    if (typeof self.args[0] === 'string') {
+      console.log(self.args[0]);
+      grunt.config('pkg.version', self.args[0]);
+    }
+    grunt.task.mark().run('gh-pages');
   });
 
   return grunt;
