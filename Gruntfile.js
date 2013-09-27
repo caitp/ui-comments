@@ -224,7 +224,8 @@ module.exports = function(grunt) {
         options: {
           base: '<%= dist %>',
           repo: 'https://github.com/caitp/ui-comments.git',
-          message: 'gh-pages v<%= pkg.version %>'
+          message: 'gh-pages v<%= pkg.version %>',
+          add: true
         },
         src: ['**/*']
       }
