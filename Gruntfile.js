@@ -212,7 +212,11 @@ module.exports = function(grunt) {
         image: 'logo.png',
         imageLink: 'http://caitp.github.io/ui-comments',
         titleLink: 'http://caitp.github.io/ui-comments',
-        html5Mode: false
+        html5Mode: false,
+        analytics: {
+          account: 'UA-44389518-1',
+          domainName: 'caitp.github.io'
+        }
       },
       api: {
         src: ["src/comments.js", "src/**/*.ngdoc"],
@@ -438,7 +442,6 @@ module.exports = function(grunt) {
   grunt.registerTask('docgen', function() {
     var self = this;
     if (typeof self.args[0] === 'string') {
-      console.log(self.args[0]);
       grunt.config('pkg.version', self.args[0]);
     }
     grunt.task.mark().run('gh-pages');
