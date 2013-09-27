@@ -1,3 +1,11 @@
+<a name="v0.0.5"></a>
+### v0.0.5 (2013-09-26)
+
+
+#### Bug Fixes
+
+* **release:** Generate gh-pages branch before setting SNAPSHOT version ([52cb6549](http://github.com/caitp/ui-comments/commit/52cb65491d84a70104f25dcff7bfe0f74c2d34e2))
+
 <a name="v0.0.4"></a>
 ### v0.0.4 (2013-09-26)
 
