@@ -96,9 +96,9 @@ angular.module('ui.comments.directive', [])
     }
   }
   function controllerSetter(setting, value) {
-    if (value && typeof value === 'string' ||
-        typeof value === 'function' ||
-        angular.isArray(value)) {
+    if (value && (angular.isString(value) && value.length ||
+        angular.isFunction(value) ||
+        angular.isArray(value))) {
       config[setting] = value;
     } else {
       config[setting] = emptyController;
@@ -177,10 +177,9 @@ angular.module('ui.comments.directive', [])
  * The comments container produces an isolate scope, and injected into the isolate scope is the
  * the following:
  *
- *   - _self_: Container for all exposed properties
- *      - _self.commentData_: Collection of comments, shared with the parent scope.
+ * - _comments_: Collection of comments, shared with the parent scope.
  *
- * **TODO**: Expose the child-container status in _self_, so that it may be ng-if'd in templates.
+ * **TODO**: Expose the child-container status in _status_, so that it may be ng-if'd in templates.
  *
  * The container should contain an `ng-repeat` directive for child comments. A very simple example
  * of the {@link ui.comments.commentsConfig#containerTemplate containerTemplate} might look like
@@ -188,28 +187,25 @@ angular.module('ui.comments.directive', [])
  *
  * <pre>
  * <div class="comments">
- *   <comment ng-repeat="comment in self.commentData" comment-data="comment"></comment>
+ *   <comment ng-repeat="comment in comments" comment-data="comment"></comment>
  * </div>
  * </pre>
  */
 .directive('comments', function($compile, commentsConfig) {
   return {
     restrict: 'EA',
-    require: '?^comment',
+    require: ['?^comment'],
     transclude: true,
     replace: true,
     templateUrl: function() { return commentsConfig.containerTemplate; },
-    scope: true,
-    controller: function($scope) {},
+		scope: {
+			'comments': '=commentData'
+		},
+		controller: function() {},
     compile: function() {
-      return function(scope, elem, attr, CommentsCtrl, CommentCtrl) {
-        var isDef = angular.isDefined, $eval = scope.$eval, children = false;
-        scope.self = {};
-        scope.$watchCollection(attr.commentData, function(newval, oldval) {
-          scope.self.commentData = angular.isArray(newval) ? newval : [];
-        });
+      return function(scope, elem, attr, ctrl) {
         attr.$observe('orderBy', function(newval, oldval) {
-          scope.self.commentOrder = newval || commentsConfig.orderBy;
+          scope.commentOrder = newval || commentsConfig.orderBy;
         });
       };
     }
@@ -259,53 +255,48 @@ angular.module('ui.comments.directive', [])
  * infinite {@link http://docs.angularjs.org/api/ng.$compile $compile} loop, and eat a lot of
  * memory.
  */
-.directive('comment', function($compile, commentsConfig) {
+.directive('comment', function($compile, commentsConfig, $controller) {
   return {
     require: '^comments',
     restrict: 'EA',
     transclude: true,
     replace: true,
     templateUrl: function() { return commentsConfig.commentTemplate; },
-    controller: function($scope, $controller, commentsConfig) {
-      var unregister = $scope.$watch('$element', function($element) {
-        unregister();
-        unregister = undefined;
-        var controller = commentsConfig.commentController,
-            controllerInstance;
-        if (controller) {
-          controllerInstance = $controller(controller, {
-            '$scope': $scope
-          });
-          if (controllerInstance) {
-            $element.data('$commentController', controllerInstance);
-          }
-        }
-      });
-    },
+		scope: {
+			comment: '=commentData'
+		},
     compile: function(scope, elem) {
       return function(scope, elem, attr, comments) {
+				var controller = commentsConfig.commentController, controllerInstance;
+				if (controller) {
+					controllerInstance = $controller(controller, {
+						'$scope': scope,
+						'$element': elem
+					});
+					if (controllerInstance) {
+						elem.data('$commentController', controllerInstance);
+					}
+				}
         if (elem.parent().attr('child-comments') === 'true') {
           elem.addClass('child-comment');
         }
-        scope.comment = scope.$eval(attr.commentData);
         var children = false, compiled, sub =
         angular.element('<comments child-comments="true" ' +
                         'comment-data="comment.children"></comments>');
-        scope.$element = elem;
         function update(data) {
           if (angular.isArray(data) && data.length > 0 && !children) {
             compiled = $compile(sub)(scope);
             var w = scope.$watch('$$phase', function(newval) {
               w();
-              scope.$element.append(compiled);
-              scope.$element.triggerHandler('filled.comments', compiled);
+              elem.append(compiled);
+              elem.triggerHandler('filled.comments', compiled);
               children = true;
             });
           } else if((!angular.isArray(data) || !data.length) && children) {
             children = false;
             compiled.remove();
             compiled = undefined;
-            scope.$element.triggerHandler('emptied.comments');
+            elem.triggerHandler('emptied.comments');
           }
         }
 

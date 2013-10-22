@@ -1,16 +1,18 @@
 describe('ui.comments', function() {
-  var $scope, $document, $body, $compile, comments;
+  var $scope, $document, $body, $compile, comments, firstComment, firstCtrl;
   beforeEach(function() {
     angular.module('testModule', [
       'ui.comments.directive',
       'template/comments/comments.html',
       'template/comments/comment.html'
     ])
-    .controller('TestCtrl1', function($scope) {
-      $scope.controllerName = "TestCtrl1";
+    .controller('TestCtrl1', function($scope, $element) {
+      this.controllerName = "TestCtrl1";
+			this.$element = $element;
     })
-    .controller('TestCtrl2', function($scope) {
-      $scope.controllerName = "TestCtrl2";
+    .controller('TestCtrl2', function($scope, $element) {
+      this.controllerName = "TestCtrl2";
+			this.$element = $element;
     });
     angular.forEach([
       'testModule',
@@ -27,14 +29,22 @@ describe('ui.comments', function() {
       $compile = _$compile_;
       $body = $document.find('body');
     });
+		firstComment = function() {
+			return comments.find('.comment').first();
+		}
+		firstCtrl = function() {
+			return firstComment().controller('comment');
+		}
   });
+
 
   describe('DOM', function() {
     describe('top-level comments', function() {
       beforeEach(function() {
         $scope.comments = [];
-        comments = $compile(angular.element('<comments comment-data="comments"></comments>'))($scope);
+        comments = $compile('<comments comment-data="comments"></comments>')($scope);
       });
+
 
       it('adds comment to DOM when comment model grows', function() {
         expect(comments.children().length).toEqual(0);
@@ -42,6 +52,7 @@ describe('ui.comments', function() {
         $scope.$digest();
         expect(comments.children().length).toEqual(1);
       });
+
 
       it('removes comment from DOM when comment model shrinks', function() {
         $scope.comments.push({});
@@ -52,6 +63,7 @@ describe('ui.comments', function() {
         expect(comments.children().length).toEqual(0);
       });
 
+
       it('changes comment data when comment model changes', function() {
         $scope.comments.push({text: 'Test Comment'});
         $scope.$digest();
@@ -60,6 +72,7 @@ describe('ui.comments', function() {
         $scope.$digest();
         expect(comments.find('.comment-body').text()).toEqual("Changed Comment");
       });
+
 
       it('re-orders comments in DOM when comment model is re-ordered', function() {
         $scope.comments.push({text: '123'});
@@ -72,6 +85,7 @@ describe('ui.comments', function() {
       });
     });
 
+
     describe('child comments', function() {
       beforeEach(function() {
         $scope.comments = [{
@@ -81,9 +95,10 @@ describe('ui.comments', function() {
             { text: 'Second child' }
           ]
         }];
-        comments = $compile(angular.element('<comments comment-data="comments"></comments>'))($scope);
+        comments = $compile('<comments comment-data="comments"></comments>')($scope);
         $scope.$digest();
       });
+
 
       it('adds comment to DOM when child comment model grows', function() {
         expect(comments.find('.child-comment').length).toEqual(2);
@@ -92,12 +107,14 @@ describe('ui.comments', function() {
         expect(comments.find('.child-comment').length).toEqual(3);
       });
 
+
       it('removes comment from DOM when child comment model shrinks', function() {
         expect(comments.find('.child-comment').length).toEqual(2);
         $scope.comments[0].children.pop();
         $scope.$digest();
         expect(comments.find('.child-comment').length).toEqual(1);
       });
+
 
       it('changes comment data when child comment model changes', function() {
         var first = comments.find('.child-comment > .comment-body').first();
@@ -106,6 +123,7 @@ describe('ui.comments', function() {
         $scope.$digest();
         expect(first.text()).toEqual("Changed Comment");
       });
+
 
       it('re-orders comments in DOM when child comment model is re-ordered', function() {
         var children = comments.find('.child-comment');
@@ -117,10 +135,11 @@ describe('ui.comments', function() {
     });
   });
 
+
   describe('events', function() {
     it('fires `comments.filled` when child comments become available', function() {
       $scope.comments = [{children: []}];
-      comments = $compile(angular.element('<comments comment-data="comments"></comments>'))($scope);
+      comments = $compile('<comments comment-data="comments"></comments>')($scope);
       $scope.$digest();
       var parent = comments.find('.comment').first(),
           callback = jasmine.createSpy('commentsFilled');
@@ -130,9 +149,10 @@ describe('ui.comments', function() {
       expect(callback).toHaveBeenCalledWith(jasmine.any(Object), jasmine.any(HTMLDivElement));
     });
 
+
     it('fires `comments.emptied` when child comments are no longer available', function() {
       $scope.comments = [{children: [{}]}];
-      comments = $compile(angular.element('<comments comment-data="comments"></comments>'))($scope);
+      comments = $compile('<comments comment-data="comments"></comments>')($scope);
       $scope.$digest();
       var parent = comments.find('.comment').first(),
           callback = jasmine.createSpy('commentsEmptied');
@@ -142,6 +162,7 @@ describe('ui.comments', function() {
       expect(callback).toHaveBeenCalled();
     });
   });
+
 
   describe('custom comment controller', function() {
     var commentsConfig;
@@ -154,31 +175,42 @@ describe('ui.comments', function() {
 
     it('instantiates the controller named in commentConfig', function() {
       commentsConfig.commentController = 'TestCtrl1';
-      comments = $compile(angular.element('<comments comment-data="comments"></comments>'))($scope);
+      comments = $compile('<comments comment-data="comments"></comments>')($scope);
       $scope.$digest();
-      expect(comments.find('.comment').first().scope().controllerName).toEqual('TestCtrl1');
-    });
-    it('instantiates the controller named in commentConfig', function() {
+      expect(firstCtrl().controllerName).toEqual('TestCtrl1');
+
       commentsConfig.commentController = 'TestCtrl2';
-      comments = $compile(angular.element('<comments comment-data="comments"></comments>'))($scope);
+      comments = $compile('<comments comment-data="comments"></comments>')($scope);
       $scope.$digest();
-      expect(comments.find('.comment').first().scope().controllerName).toEqual('TestCtrl2');
+      expect(firstCtrl().controllerName).toEqual('TestCtrl2');
     });
+
+
     it('instantiates the controller function in commentConfig', function() {
       commentsConfig.commentController = function($scope) {
-        $scope.controllerName = 'TestCtrl3';
+        this.controllerName = 'TestCtrl3';
       };
-      comments = $compile(angular.element('<comments comment-data="comments"></comments>'))($scope);
+      comments = $compile('<comments comment-data="comments"></comments>')($scope);
       $scope.$digest();
-      expect(comments.find('.comment').first().scope().controllerName).toEqual('TestCtrl3');
+      expect(firstCtrl().controllerName).toEqual('TestCtrl3');
     });
-    it('instantiates the controller function in commentConfig with bracket notation', function() {
+
+
+    it('instantiates the controller function in commentConfig with array annotation', function() {
       commentsConfig.commentController = ['$scope', function(s) {
-        s.controllerName = 'TestCtrl4';
+        this.controllerName = 'TestCtrl4';
       }];
-      comments = $compile(angular.element('<comments comment-data="comments"></comments>'))($scope);
+      comments = $compile('<comments comment-data="comments"></comments>')($scope);
       $scope.$digest();
-      expect(comments.find('.comment').first().scope().controllerName).toEqual('TestCtrl4');
+      expect(firstCtrl().controllerName).toEqual('TestCtrl4');
     });
+
+
+		it('injects the comment $element into controller', function() {
+			commentsConfig.commentController = 'TestCtrl2';
+			comments = $compile('<comments comment-data="comments"></comments>')($scope);
+			$scope.$digest();
+			expect(firstComment()[0]).toEqual(firstCtrl().$element[0]);
+		});
   });
 });
