@@ -11,11 +11,10 @@
 the following:</p>
 
 <ul>
-<li><em>self</em>: Container for all exposed properties
-<ul><li><em>self.commentData</em>: Collection of comments, shared with the parent scope.</li></ul></li>
+<li><em>comments</em>: Collection of comments, shared with the parent scope.</li>
 </ul>
 
-<p><strong>TODO</strong>: Expose the child-container status in <em>self</em>, so that it may be ng-if'd in templates.</p>
+<p><strong>TODO</strong>: Expose the child-container status in <em>status</em>, so that it may be ng-if'd in templates.</p>
 
 <p>The container should contain an <code>ng-repeat</code> directive for child comments. A very simple example
 of the <a href="#/api/ui.comments.commentsConfig#containerTemplate">containerTemplate</a> might look like
@@ -23,7 +22,7 @@ the following:</p>
 
 <pre class="prettyprint linenums">
 &lt;div class="comments"&gt;
-  &lt;comment ng-repeat="comment in self.commentData" comment-data="comment"&gt;&lt;/comment&gt;
+  &lt;comment ng-repeat="comment in comments" comment-data="comment"&gt;&lt;/comment&gt;
 &lt;/div&gt;
 </pre></div>
 <h2 id="Usage">Usage</h2>

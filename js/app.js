@@ -4,6 +4,8 @@ angular.module("views/comment.html", []).run(["$templateCache", function($templa
     "  <div class=\"page-header\">\n" +
     "    <div class=\"comment-header\">\n" +
     "      <h4 class=\"comment-user\">\n" +
+    "        <button ng-if=\"comment.children\" class=\"icon-2x clear-square glyphicon\" ng-class=\"{'icon-minus-sign-alt': !collapsed, 'icon-plus-sign-alt': collapsed}\" title=\"toggle children\" ng-click=\"collapse()\"></button>" +
+    "        <button ng-if=\"!comment.children\" class=\"icon-2x clear-square\"></button>" +
     "        <span class=\"comment-username\" ng-if=\"!comment.profileUrl\">{{comment.name}}</span>\n" +
     "        <a class=\"comment-username\" ng-if=\"comment.profileUrl\" ng-href=\"{{comment.profileUrl}}\" title=\"{{comment.name}}\">{{comment.name}}</a>\n" +
     "        <small class=\"comment-date\" ng-if=\"comment.date\" title=\"{{comment.date | calendar}}\">{{comment.date | timeago}}</small>\n" +
@@ -14,14 +16,13 @@ angular.module("views/comment.html", []).run(["$templateCache", function($templa
     "  <div class=\"row\">\n" +
     "    <div class=\"container comment-body\" ng-bind=\"comment.text\"></div>\n" +
     "  </div>\n" +
-    "  <button ng-if=\"comment.children\" class=\"btn btn-default glyphicon glyphicon-plus\" ng-click=\"collapse()\">Toggle Child Comments</button>" +
     "</div>");
 }]);
 
 angular.module("views/comments.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("views/comments.html",
     "<div class=\"comments panel panel-default\">\n" +
-    "  <comment ng-repeat=\"comment in self.commentData\" comment-data=\"comment\"></comment>\n" +
+    "  <comment ng-repeat=\"comment in comments\" comment-data=\"comment\"></comment>\n" +
     "</div>\n" +
     "");
 }]);
@@ -36,37 +37,48 @@ angular.module('commentsDemo', ['views/comments.html', 'views/comment.html', 'ui
   });
 })
 
-.controller('CommentCtrl', function($scope) {
+.controller('CommentCtrl', function($scope, $element) {
   var children;
-  $scope.$element.bind('filled.comments', collapse);
+  $scope.collapsed = true;
+  $element.bind('filled.comments', collapse);
   $scope.$on('$destroy', function() {
-    $scope.$element.unbind('filled.comments', collapse);
+    $element.unbind('filled.comments', collapse);
   });
   function collapse(e, childComments) {
     children = $(childComments);
     children.collapse('hide');
   }
   $scope.collapse = function() {
+    $scope.collapsed = children.hasClass('in');
     children.collapse('toggle');
   };
 })
 
 .controller('DemoCtrl', function($scope) {
-  $scope.data = {};
-  $scope.data.comments = [
+  $scope.comments = [
     {
       name: '@caitp',
       date: new Date(),
       profileUrl: 'https://github.com/caitp',
       text: 'UI-Comments is designed to simplify the process of creating comment systems similar to Reddit, Imgur or Discuss in AngularJS.',
-      children: [
-        {
+      children: [{
+        name: '@caitp',
+        date: new Date(),
+        profileUrl: 'https://github.com/caitp',
+        text: 'We support nested comments, in a very simple fashion. It\'s great!',
+        children: [{
           name: '@caitp',
           date: new Date(),
           profileUrl: 'https://github.com/caitp',
-          text: 'We support nested comments'
-        }
-      ]
+          text: 'These nested comments can descend arbitrarily deep, into many levels. This can be used to reflect a long and detailed conversation about typical folly which occurs in comments',
+          children: [{
+            name: '@caitp',
+            date: new Date(),
+            profileUrl: 'https://github.com/caitp',
+            text: 'Having deep conversations on the internet can be used to drive and derive data about important topics, from marketing demographic information to political affiliation and even sexual orientation if you care to find out about that. Isn\'t that exciting?'
+          }]
+        }]
+      }]
     }
   ]
 })

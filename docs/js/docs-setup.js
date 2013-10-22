@@ -22,7 +22,7 @@ NG_DOCS={
       "id": "ui.comments.directive:comments",
       "shortName": "comments",
       "type": "directive",
-      "keywords": "_self _self_ all an and api be by child child-container class collection comment comment-data commentdata commentdata_ comments commentsconfig contain container containertemplate containing data default directive div ea example expose exposed following for from in injected into is isolate it like look may might model ng-if ng-repeat of order-by orderby override parent produces properties replaced scope self shared should simple so status templates that the this transcluded ui value very with"
+      "keywords": "_comments_ _status_ an and api be by child child-container class collection comment comment-data comments commentsconfig contain container containertemplate containing data default directive div ea example expose following for from in injected into is isolate it like look may might model ng-if ng-repeat of order-by orderby override parent produces replaced scope shared should simple so status templates that the this transcluded ui value very with"
     }
   ],
   "apis": {
@@ -32,6 +32,6 @@ NG_DOCS={
   "startPage": "/api",
   "scripts": [
     "angular.min.js",
-    "ui-comments-0.0.9.js"
+    "ui-comments-0.0.10.js"
   ]
 };

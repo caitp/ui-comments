@@ -7,13 +7,25 @@ body {
 }
 
 .comment {
-  padding: .5em;
+  padding: .25em;
   margin: .25em;
 }
 
 .comment > .comments {
   margin-top: 1em;
   margin-left: 2em;  
+}
+
+.comment-header > h4 {
+  line-height: 2em;
+  height: 2em;
+  display: block;
+  vertical-align: middle;
+}
+
+.comment-header > h4 > button {
+  position: relative;
+  top: -.125em;
 }
 
 .comment > .page-header {
@@ -60,3 +72,15 @@ body {
     border-bottom: 1px solid rgba(221,221,221,0.3);
 }
 
+.comment {
+  position: relative;
+}
+
+
+.clear-square {
+  border: none;
+  background: none;
+  display: block;
+  float: left;
+  outline: none;
+}
