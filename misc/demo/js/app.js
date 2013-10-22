@@ -21,7 +21,7 @@ angular.module("views/comment.html", []).run(["$templateCache", function($templa
 angular.module("views/comments.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("views/comments.html",
     "<div class=\"comments panel panel-default\">\n" +
-    "  <comment ng-repeat=\"comment in self.commentData\" comment-data=\"comment\"></comment>\n" +
+    "  <comment ng-repeat=\"comment in comments\" comment-data=\"comment\"></comment>\n" +
     "</div>\n" +
     "");
 }]);
@@ -36,11 +36,11 @@ angular.module('commentsDemo', ['views/comments.html', 'views/comment.html', 'ui
   });
 })
 
-.controller('CommentCtrl', function($scope) {
+.controller('CommentCtrl', function($scope, $element) {
   var children;
-  $scope.$element.bind('filled.comments', collapse);
+  $element.bind('filled.comments', collapse);
   $scope.$on('$destroy', function() {
-    $scope.$element.unbind('filled.comments', collapse);
+    $element.unbind('filled.comments', collapse);
   });
   function collapse(e, childComments) {
     children = $(childComments);
@@ -52,8 +52,7 @@ angular.module('commentsDemo', ['views/comments.html', 'views/comment.html', 'ui
 })
 
 .controller('DemoCtrl', function($scope) {
-  $scope.data = {};
-  $scope.data.comments = [
+  $scope.comments = [
     {
       name: '@caitp',
       date: new Date(),
