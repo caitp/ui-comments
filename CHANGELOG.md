@@ -1,3 +1,11 @@
+<a name="v0.0.10"></a>
+### v0.0.10 (2013-10-22)
+
+
+#### Bug Fixes
+
+* **style:** remove tab spacing from source files ([2066c22f](http://github.com/caitp/ui-comments/commit/2066c22f3baf107fabdf7c5bdb244e5c80c74799))
+
 <a name="v0.0.9"></a>
 ### v0.0.9 (2013-10-16)
 
