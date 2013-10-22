@@ -198,10 +198,10 @@ angular.module('ui.comments.directive', [])
     transclude: true,
     replace: true,
     templateUrl: function() { return commentsConfig.containerTemplate; },
-		scope: {
-			'comments': '=commentData'
-		},
-		controller: function() {},
+    scope: {
+      'comments': '=commentData'
+    },
+    controller: function() {},
     compile: function() {
       return function(scope, elem, attr, ctrl) {
         attr.$observe('orderBy', function(newval, oldval) {
@@ -262,21 +262,21 @@ angular.module('ui.comments.directive', [])
     transclude: true,
     replace: true,
     templateUrl: function() { return commentsConfig.commentTemplate; },
-		scope: {
-			comment: '=commentData'
-		},
+    scope: {
+      comment: '=commentData'
+    },
     compile: function(scope, elem) {
       return function(scope, elem, attr, comments) {
-				var controller = commentsConfig.commentController, controllerInstance;
-				if (controller) {
-					controllerInstance = $controller(controller, {
-						'$scope': scope,
-						'$element': elem
-					});
-					if (controllerInstance) {
-						elem.data('$commentController', controllerInstance);
-					}
-				}
+        var controller = commentsConfig.commentController, controllerInstance;
+        if (controller) {
+          controllerInstance = $controller(controller, {
+            '$scope': scope,
+            '$element': elem
+          });
+          if (controllerInstance) {
+            elem.data('$commentController', controllerInstance);
+          }
+        }
         if (elem.parent().attr('child-comments') === 'true') {
           elem.addClass('child-comment');
         }

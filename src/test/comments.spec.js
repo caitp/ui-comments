@@ -8,11 +8,11 @@ describe('ui.comments', function() {
     ])
     .controller('TestCtrl1', function($scope, $element) {
       this.controllerName = "TestCtrl1";
-			this.$element = $element;
+      this.$element = $element;
     })
     .controller('TestCtrl2', function($scope, $element) {
       this.controllerName = "TestCtrl2";
-			this.$element = $element;
+      this.$element = $element;
     });
     angular.forEach([
       'testModule',
@@ -29,12 +29,12 @@ describe('ui.comments', function() {
       $compile = _$compile_;
       $body = $document.find('body');
     });
-		firstComment = function() {
-			return comments.find('.comment').first();
-		}
-		firstCtrl = function() {
-			return firstComment().controller('comment');
-		}
+    firstComment = function() {
+      return comments.find('.comment').first();
+    }
+    firstCtrl = function() {
+      return firstComment().controller('comment');
+    }
   });
 
 
@@ -206,11 +206,11 @@ describe('ui.comments', function() {
     });
 
 
-		it('injects the comment $element into controller', function() {
-			commentsConfig.commentController = 'TestCtrl2';
-			comments = $compile('<comments comment-data="comments"></comments>')($scope);
-			$scope.$digest();
-			expect(firstComment()[0]).toEqual(firstCtrl().$element[0]);
-		});
+    it('injects the comment $element into controller', function() {
+      commentsConfig.commentController = 'TestCtrl2';
+      comments = $compile('<comments comment-data="comments"></comments>')($scope);
+      $scope.$digest();
+      expect(firstComment()[0]).toEqual(firstCtrl().$element[0]);
+    });
   });
 });
