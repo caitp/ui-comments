@@ -187,7 +187,7 @@ module.exports = function(grunt) {
         'git tag v%version%',
       ],
       'release-start': [
-        'grunt version:patch:"SNAPSHOT"',
+        'grunt version:minor:"SNAPSHOT"',
         'git commit package.json -m "chore(release): Starting v%version%"'
       ]
     },
