@@ -82,7 +82,9 @@ angular.module('ui.comments.directive', []).provider('commentsConfig', function 
   '$compile',
   'commentsConfig',
   '$controller',
-  function ($compile, commentsConfig, $controller) {
+  '$exceptionHandler',
+  '$timeout',
+  function ($compile, commentsConfig, $controller, $exceptionHandler, $timeout) {
     return {
       require: [
         '^comments',
@@ -117,32 +119,55 @@ angular.module('ui.comments.directive', []).provider('commentsConfig', function 
             elem.addClass('child-comment');
           }
           var children = false, compiled, sub = angular.element('<comments child-comments="true" ' + 'comment-data="comment.children"></comments>'), transclude;
+          function notify(scope, name, data) {
+            if (!controllerInstance) {
+              return;
+            }
+            var namedListeners = scope.$$listeners[name] || [], i, length, args = [data];
+            for (i = 0, length = namedListeners.length; i < length; i++) {
+              if (!namedListeners[i]) {
+                namedListeners.splice(i, 1);
+                i--;
+                length--;
+                continue;
+              }
+              try {
+                namedListeners[i].apply(null, args);
+              } catch (e) {
+                $exceptionHandler(e);
+              }
+            }
+          }
           function update(data) {
             if (!angular.isArray(data)) {
               data = [];
             }
             if (data.length > 0 && !children) {
               compiled = $compile(sub)(scope);
-              var w = scope.$watch('$$phase', function (val) {
-                  w();
-                  if (comment.commentsTransclude) {
-                    transclude = comment.commentsTransclude.clone();
-                    comment.commentsTransclude.replaceWith(compiled);
-                  } else {
-                    elem.append(compiled);
+              if (comment.commentsTransclude) {
+                transclude = comment.commentsTransclude.clone(true);
+                comment.commentsTransclude.replaceWith(compiled);
+              } else {
+                elem.append(compiled);
+              }
+              children = true;
+              var w = scope.$watch(function () {
+                  return compiled.children().length;
+                }, function (val) {
+                  if (val >= data.length) {
+                    w();
+                    notify(scope, '$filledNestedComments', compiled);
                   }
-                  children = true;
-                  elem.triggerHandler('filled.comments', compiled);
                 });
             } else if (!data.length && children) {
               children = false;
               if (comment.commentsTransclude && transclude) {
-                comment.commentsTransclude.replaceWith(transclude);
+                compiled.replaceWith(transclude);
               } else {
                 compiled.remove();
               }
-              compiled = transclude = undefined;
-              elem.triggerHandler('emptied.comments');
+              notify(scope, '$emptiedNestedComments', comment.commentsTransclude || elem);
+              transclude = compiled = undefined;
             }
           }
           scope.$watch('comment', function (newval) {
@@ -157,7 +182,8 @@ angular.module('ui.comments.directive', []).provider('commentsConfig', function 
     restrict: 'EA',
     require: '^comment',
     link: {
-      pre: function (scope, element, attr, comment) {
+      post: function (scope, element, attr, comment) {
+        element.addClass('comments-transclude');
         comment.commentsTransclude = element;
       }
     }
@@ -166,7 +192,7 @@ angular.module('ui.comments.directive', []).provider('commentsConfig', function 
 angular.module('template/comments/comment.html', []).run([
   '$templateCache',
   function ($templateCache) {
-    $templateCache.put('template/comments/comment.html', '<div class="comment">\n' + '  <div class="comment-header">\n' + '    <span class="comment-user">\n' + '      <a class="comment-username" ng-if="comment.profileUrl" ng-href="{{comment.profileUrl}}" title="{{comment.name}}">{{comment.name}}</a>\n' + '      <img class="comment-avatar" ng-if="comment.avatarUrl" ng-src="{{comment.avatarUrl}}" alt="{{comment.name}}" />\n' + '      <span class="comment-username" ng-if="!comment.profileUrl">{{comment.name}}</span>\n' + '      <span class="comment-date" ng-if="comment.date">{{comment.date}}</span>\n' + '  </div>\n' + '  <div class="comment-body" ng-bind="comment.text">\n' + '      <child-comments comment-data="comment.children"></child-comments>\n' + '  </div>\n' + '</div>');
+    $templateCache.put('template/comments/comment.html', '<div class="comment">\n' + '  <div class="comment-header">\n' + '    <span class="comment-user">\n' + '      <a class="comment-username" ng-if="comment.profileUrl" ng-href="{{comment.profileUrl}}" title="{{comment.name}}">{{comment.name}}</a>\n' + '      <img class="comment-avatar" ng-if="comment.avatarUrl" ng-src="{{comment.avatarUrl}}" alt="{{comment.name}}" />\n' + '      <span class="comment-username" ng-if="!comment.profileUrl">{{comment.name}}</span>\n' + '      <span class="comment-date" ng-if="comment.date">{{comment.date}}</span>\n' + '  </div>\n' + '  <div class="comment-body">\n' + '    <div ng-bind="comment.text"></div>\n' + '    <div comments-transclude comment-data="comment.children"></div>\n' + '  </div>\n' + '</div>');
   }
 ]);
 angular.module('template/comments/comments.html', []).run([
