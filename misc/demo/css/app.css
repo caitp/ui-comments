@@ -86,3 +86,93 @@ body {
   min-width: 36px;
   min-height: 34px;
 }
+
+.subreddit {
+  display: table;
+  width: 100%;
+  border-top: 1px solid #eee;
+  margin-top: .5em;
+  padding-top: .5em;
+  min-width: 720px;
+  overflow: scroll;
+}
+
+.subreddit > * {
+  height: 92px;
+}
+
+.subreddits: {
+  display: table;
+}
+.subreddits:hover {
+  text-decoration: none;
+}
+.subreddits:focus {
+  text-decoration: none;
+}
+.subreddits > * {
+  height: 50px;
+  display: table-cell;
+  vertical-align: middle;
+  text-align: left;
+  word-wrap:break-word;
+  width: 100px;
+  margin: 0;
+  padding: 0;
+  margin-right: 1em;
+}
+
+.subreddits > .title {
+  width: 160px!important;
+}
+
+.subreddits > h4 {
+  width: auto;
+  margin-right: 0;
+}
+
+.subreddit:first-child {
+  border: none;
+  margin-top: 0;
+  padding-top: 0;
+}
+
+.subreddit > .score, .subreddit > .author {
+  display: table-cell;
+  vertical-align: middle;
+  text-align: left;
+}
+
+.subreddit > .author {
+  margin: 0;
+  padding: 0;
+}
+
+.subreddit .score {
+  width: 64px;
+}
+.subreddit .author {
+  width: 160px;
+}
+
+.subreddit .thumbnail {
+  width: 92px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.subreddit .title {
+  display: table-cell;
+  vertical-align: middle;
+  text-align: left;
+  word-wrap:break-word;
+}
+
+.subreddit .title h3, .subreddit .title p {
+  margin-left: .5em;
+}
+
+.subreddit .img {
+  width: 92px;
+}
