@@ -6,7 +6,8 @@
       <span class="comment-username" ng-if="!comment.profileUrl">{{comment.name}}</span>
       <span class="comment-date" ng-if="comment.date">{{comment.date}}</span>
   </div>
-  <div class="comment-body" ng-bind="comment.text">
-      <child-comments comment-data="comment.children"></child-comments>
+  <div class="comment-body">
+    <div ng-bind="comment.text"></div>
+    <div comments-transclude comment-data="comment.children"></div>
   </div>
 </div>

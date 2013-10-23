@@ -9,10 +9,12 @@ describe('ui.comments', function() {
     .controller('TestCtrl1', function($scope, $element) {
       this.controllerName = "TestCtrl1";
       this.$element = $element;
+			this.$scope = $scope;
     })
     .controller('TestCtrl2', function($scope, $element) {
       this.controllerName = "TestCtrl2";
       this.$element = $element;
+			this.$scope = $scope;
     });
     angular.forEach([
       'testModule',
@@ -67,10 +69,10 @@ describe('ui.comments', function() {
       it('changes comment data when comment model changes', function() {
         $scope.comments.push({text: 'Test Comment'});
         $scope.$digest();
-        expect(comments.find('.comment-body').text()).toEqual("Test Comment");
+        expect(comments.find('.comment-body > div').text()).toEqual("Test Comment");
         $scope.comments[0].text = 'Changed Comment';
         $scope.$digest();
-        expect(comments.find('.comment-body').text()).toEqual("Changed Comment");
+        expect(comments.find('.comment-body > div').text()).toEqual("Changed Comment");
       });
 
 
@@ -78,10 +80,10 @@ describe('ui.comments', function() {
         $scope.comments.push({text: '123'});
         $scope.comments.push({text: 'ABC'});
         $scope.$digest();
-        expect(comments.find('.comment-body').first().text()).toEqual('123');
+        expect(comments.find('.comment-body > div').first().text()).toEqual('123');
         $scope.comments.reverse();
         $scope.$digest();
-        expect(comments.find('.comment-body').first().text()).toEqual('ABC');
+        expect(comments.find('.comment-body > div').first().text()).toEqual('ABC');
       });
     });
 
@@ -117,7 +119,7 @@ describe('ui.comments', function() {
 
 
       it('changes comment data when child comment model changes', function() {
-        var first = comments.find('.child-comment > .comment-body').first();
+        var first = comments.find('.child-comment > .comment-body > div').first();
         expect(first.text()).toEqual("First child");
         $scope.comments[0].children[0].text = 'Changed Comment';
         $scope.$digest();
@@ -127,37 +129,47 @@ describe('ui.comments', function() {
 
       it('re-orders comments in DOM when child comment model is re-ordered', function() {
         var children = comments.find('.child-comment');
-        expect(children.find('.comment-body').first().text()).toEqual('First child');
+        expect(children.find('.comment-body > div').first().text()).toEqual('First child');
         $scope.comments[0].children.reverse();
         $scope.$digest();
-        expect(children.find('.comment-body').first().text()).toEqual('Second child');
+        expect(children.find('.comment-body > div').first().text()).toEqual('Second child');
       });
     });
   });
 
 
   describe('events', function() {
-    it('fires `comments.filled` when child comments become available', function() {
+		beforeEach(inject(function(commentsConfig) {
+			commentsConfig.commentController = 'TestCtrl1';
+		}));
+    it('fires `$filledNestedComments` when child comments become available', function() {
       $scope.comments = [{children: []}];
       comments = $compile('<comments comment-data="comments"></comments>')($scope);
       $scope.$digest();
-      var callback = jasmine.createSpy('commentsFilled');
-			comments.find('.comment').bind('filled.comments', callback);
+      var scope = firstCtrl().$scope,
+			    callback = jasmine.createSpy('commentsFilled');
+			scope.$on('$filledNestedComments', callback);
       $scope.comments[0].children = [{}];
       $scope.$digest();
-      expect(callback).toHaveBeenCalledWith(jasmine.any(Object), jasmine.any(HTMLElement));
+      expect(callback).toHaveBeenCalled();
+			expect(callback.mostRecentCall.args[0][0]).toEqual(comments.find('.comments').first()[0]);
+			expect(callback.mostRecentCall.args[0].children().length).toEqual(1);
     });
 
 
-    it('fires `comments.emptied` when child comments are no longer available', function() {
+    it('fires `$emptiedNestedComments` when child comments are no longer available', function() {
       $scope.comments = [{children: [{}]}];
       comments = $compile('<comments comment-data="comments"></comments>')($scope);
       $scope.$digest();
-      var callback = jasmine.createSpy('commentsEmptied');
-			comments.find('.comment').bind('emptied.comments', callback);
+      var scope = firstCtrl().$scope,
+			    callback = jasmine.createSpy('commentsEmptied');
+			scope.$on('$emptiedNestedComments', callback);
       $scope.comments[0].children = [];
       $scope.$digest();
       expect(callback).toHaveBeenCalled();
+			expect(comments.find('.comment .comments-transclude').first().length).toEqual(1);
+			expect(callback.mostRecentCall.args[0]).toHaveClass('comments-transclude');
+			expect(callback.mostRecentCall.args[0].children().length).toEqual(0);
     });
   });
 

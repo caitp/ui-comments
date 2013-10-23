@@ -253,7 +253,7 @@ angular.module('ui.comments.directive', [])
  * infinite {@link http://docs.angularjs.org/api/ng.$compile $compile} loop, and eat a lot of
  * memory.
  */
-.directive('comment', function($compile, commentsConfig, $controller) {
+.directive('comment', function($compile, commentsConfig, $controller, $exceptionHandler, $timeout) {
   return {
     require: ['^comments', 'comment'],
     restrict: 'EA',
@@ -284,35 +284,57 @@ angular.module('ui.comments.directive', [])
             sub = angular.element('<comments child-comments="true" ' +
                         'comment-data="comment.children"></comments>'),
             transclude;
+        // Notify controller without bubbling
+        function notify(scope, name, data) {
+          if (!controllerInstance) { return; }
+          var namedListeners = scope.$$listeners[name] || [], i, length, args = [data];
+          for (i=0, length=namedListeners.length; i<length; i++) {
+            // if listeners were deregistered, defragment the array
+            if (!namedListeners[i]) {
+              namedListeners.splice(i, 1);
+              i--;
+              length--;
+              continue;
+            }
+            try {
+              //allow all listeners attached to the current scope to run
+              namedListeners[i].apply(null, args);
+            } catch (e) {
+              $exceptionHandler(e);
+            }
+          }
+        }
         function update(data) {
           if (!angular.isArray(data)) {
             data = [];
           }
           if (data.length > 0 && !children) {
             compiled = $compile(sub)(scope);
-            var w = scope.$watch('$$phase', function(val) {
-              w();
-              if (comment.commentsTransclude) {
-                transclude = comment.commentsTransclude.clone();
-                comment.commentsTransclude.replaceWith(compiled);
-              } else {
-                elem.append(compiled);
+            if (comment.commentsTransclude) {
+              transclude = comment.commentsTransclude.clone(true);
+              comment.commentsTransclude.replaceWith(compiled);
+            } else {
+              elem.append(compiled);
+            }
+            children = true;
+            var w = scope.$watch(function() { return compiled.children().length; }, function(val) {
+              if (val >= data.length) {
+                w();
+                notify(scope, '$filledNestedComments', compiled);
               }
-              children = true;
-              elem.triggerHandler('filled.comments', compiled);
             });
           } else if(!data.length && children) {
             children = false;
             if (comment.commentsTransclude && transclude) {
-              comment.commentsTransclude.replaceWith(transclude);
+              compiled.replaceWith(transclude);
             } else {
               compiled.remove();
             }
-            compiled = transclude = undefined;
-            elem.triggerHandler('emptied.comments');
+            notify(scope, '$emptiedNestedComments', comment.commentsTransclude || elem);
+            transclude = compiled = undefined;
           }
         }
-
+        
         scope.$watch('comment', function(newval) {
           update(scope.comment.children);
         }, true);
@@ -364,7 +386,8 @@ angular.module('ui.comments.directive', [])
     restrict: 'EA',
     require: '^comment',
     link: {
-      pre: function(scope, element, attr, comment) {
+      post: function(scope, element, attr, comment) {
+        element.addClass('comments-transclude');
         comment.commentsTransclude = element;
       }
     }
