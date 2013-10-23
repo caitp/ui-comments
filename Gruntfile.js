@@ -187,7 +187,7 @@ module.exports = function(grunt) {
         'git tag v%version%',
       ],
       'release-start': [
-        'grunt version:minor:"SNAPSHOT"',
+        'grunt version:%PATCHTYPE%:"SNAPSHOT"',
         'git commit package.json -m "chore(release): Starting v%version%"'
       ]
     },
@@ -288,6 +288,9 @@ module.exports = function(grunt) {
     var self = this, sh = require('shelljs');
     self.data.forEach(function(cmd) {
       cmd = cmd.replace('%version%', grunt.file.readJSON('package.json').version);
+      cmd = cmd.replace('%PATCHTYPE%', grunt.option('patch') && 'patch' ||
+                                       grunt.option('major') &&
+                                       'major' || 'minor');
       grunt.log.ok(cmd);
       var result = sh.exec(cmd, {silent: true });
       if (result.code !== 0) {
