@@ -1,3 +1,29 @@
+<a name="v0.1.1"></a>
+### v0.1.1 (2013-10-23)
+
+
+#### Bug Fixes
+
+* **events:** now emiting $scope events rather than DOM events ([7b711238](http://github.com/caitp/ui-comments/commit/7b7112382498d451de0d852a4625376e9942f2e8))
+
+
+#### Breaking Changes
+
+* 
+Rather than binding `$element.bind('filled.comments', fn)`, one must instead
+`$scope.$on('$filledNestedComments', fn)` and expect a jQuery/jqLite element,
+which is either the comment element itself (if there is no commentsTransclude
+in use), or the commentsTransclude element (or the comments collection which
+replaces it) if it is present.
+
+Similarly, `$element.bind('emptied.comments', fn)` must instead be written as
+`$scope.$on('$emptiedNestedComments', fn)`. The same parameter rules as above
+apply.
+
+The event names are not yet final, and will likely be broken again in the near
+future.
+ ([7b711238](http://github.com/caitp/ui-comments/commit/7b7112382498d451de0d852a4625376e9942f2e8))
+
 <a name="v0.1.0"></a>
 ## v0.1.0 (2013-10-22)
 
