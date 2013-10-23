@@ -1,0 +1,9 @@
+<div class="page-header subreddit">
+  <a class="title img" ng-href="{{url}}" title="{{title}}">
+    <img class="thumbnail" ng-src="{{thumbnail}}"></img></a>
+  <a class="title" ng-href="{{url}}" title="{{title}}">
+    <h3>{{title}} <small>{{description}}</small></h3>
+  </a>
+  <div ng-if="selftext" ng-bind-html="selftext"></div>
+</div>
+<comments comment-data="comments"></comments>

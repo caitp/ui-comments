@@ -1,0 +1,18 @@
+<div class="page-header">
+  <h2>{{subreddit}}</h2>
+  <h2><small>{{description}}</small></h2>
+</div>
+
+<div>
+  <div class="subreddit" ng-repeat="article in articles | orderBy:score">
+    <p class="score icon" ng-class="{'icon-heart': article.score > 0, 'icon-heart-empty': article.score <= 0}">&nbsp;{{article.score}}</p>
+    <a class="author" ng-href="{{article.profileUrl}}" title="{{article.author}}">{{article.author}}</a>
+    <a class="title img" ng-href="{{article.comments}}" title="{{article.title}}">
+      <img class="thumbnail" ng-if="article.thumbnail" ng-src="{{article.thumbnail}}" alt="{{article.domain + ' (' + article.title + ')'}}" />
+    </a>
+    <a class="title" ng-href="{{article.comments}}" title="{{article.title}}">  
+      <p>{{article.title}}</p>
+    </a>
+    <span class="clear"></span>
+  </div>
+</div>

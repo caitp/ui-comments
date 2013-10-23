@@ -1,0 +1,19 @@
+<div class="row">
+<div class="col-5 col-sm-5 col-xs-5 col-md-5 col-lg-5">
+  <span class="input-group">
+    <span class="input-group-addon">r/</span>
+    <input class="form-control" type="text" ng-model="name" placeholder="subreddit" />
+    <span class="input-group-btn" ng-click="go(name)"><button class="btn btn-default">Go</button></span>
+  </span>
+</div>
+</div>
+<div class="page-header">
+  <h2>Popular <small>Top 10 most popular subreddits</small></h2>
+</div>
+<div ng-repeat="sub in popular | orderBy:sub.subscribers:true">
+  <a ng-href="{{sub.url}}" class="subreddits" title="{{sub.name + ' (' + sub.description + ')'}}">
+    <p><span class="icon icon-heart">&nbsp;{{sub.subscribers}}</span></p>
+    <p><span class="icon icon-eye-open">&nbsp;SFW? {{sub.sfw ? 'yes' : 'no'}}</span></p>
+    <h4 class="title">{{sub.name}}&nbsp;&nbsp;</h4><h4><small>{{sub.short_description}}</small></h4>
+  </a>
+</div>
