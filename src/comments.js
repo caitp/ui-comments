@@ -54,8 +54,6 @@ angular.module('ui.comments.directive', [])
      * directive, it will result in an infinite $compile loop. Instead,
      * {@link ui.comments.directive:comment comment} generates child collections programmatically.
      * Currently, these are simply appended to the body of the comment.
-     *
-     * **TODO**: Support customization of entry point for child comment collections.
      */
     commentTemplate: 'template/comments/comment.html',
     /**
@@ -257,7 +255,7 @@ angular.module('ui.comments.directive', [])
  */
 .directive('comment', function($compile, commentsConfig, $controller) {
   return {
-    require: '^comments',
+    require: ['^comments', 'comment'],
     restrict: 'EA',
     transclude: true,
     replace: true,
@@ -265,8 +263,10 @@ angular.module('ui.comments.directive', [])
     scope: {
       comment: '=commentData'
     },
+    controller: function($scope) {},
     compile: function(scope, elem) {
-      return function(scope, elem, attr, comments) {
+      return function(scope, elem, attr, ctrls) {
+        var comments = ctrls[0], comment = ctrls[1];
         var controller = commentsConfig.commentController, controllerInstance;
         if (controller) {
           controllerInstance = $controller(controller, {
@@ -274,37 +274,99 @@ angular.module('ui.comments.directive', [])
             '$element': elem
           });
           if (controllerInstance) {
-            elem.data('$commentController', controllerInstance);
+            elem.data('$CommentController', controllerInstance);
           }
         }
         if (elem.parent().attr('child-comments') === 'true') {
           elem.addClass('child-comment');
         }
-        var children = false, compiled, sub =
-        angular.element('<comments child-comments="true" ' +
-                        'comment-data="comment.children"></comments>');
+        var children = false, compiled,
+            sub = angular.element('<comments child-comments="true" ' +
+                        'comment-data="comment.children"></comments>'),
+            transclude;
         function update(data) {
-          if (angular.isArray(data) && data.length > 0 && !children) {
+          if (!angular.isArray(data)) {
+            data = [];
+          }
+          if (data.length > 0 && !children) {
             compiled = $compile(sub)(scope);
-            var w = scope.$watch('$$phase', function(newval) {
+            var w = scope.$watch('$$phase', function(val) {
               w();
-              elem.append(compiled);
-              elem.triggerHandler('filled.comments', compiled);
+              if (comment.commentsTransclude) {
+                transclude = comment.commentsTransclude.clone();
+                comment.commentsTransclude.replaceWith(compiled);
+              } else {
+                elem.append(compiled);
+              }
               children = true;
+              elem.triggerHandler('filled.comments', compiled);
             });
-          } else if((!angular.isArray(data) || !data.length) && children) {
+          } else if(!data.length && children) {
             children = false;
-            compiled.remove();
-            compiled = undefined;
+            if (comment.commentsTransclude && transclude) {
+              comment.commentsTransclude.replaceWith(transclude);
+            } else {
+              compiled.remove();
+            }
+            compiled = transclude = undefined;
             elem.triggerHandler('emptied.comments');
           }
         }
 
-        scope.$watchCollection(attr.commentData, function(newval) {
-          scope.comment = newval;
+        scope.$watch('comment', function(newval) {
           update(scope.comment.children);
-        });
+        }, true);
       };
+    }
+  };
+})
+
+/**
+ * @ngdoc directive
+ * @name ui.comments.directive:commentsTransclude
+ * @restrict EA
+ * @element div
+ *
+ * @description
+ *
+ * This directive is a helper which allows a user to specify in a
+ * {@link ui.comments.directive:comment comment} template where they wish child comments to be
+ * inserted.
+ *
+ * If this directive is not used, then the child comments are merely appended to the end of a
+ * comment template, which is the behaviour of the default templates.
+ *
+ * It is not a literal transclusion, and so any class names or categories are completely ignored.
+ * Instead, the element is replaced by a {@link ui.comments.directive:comments comments} collection
+ * when comments are available.
+ *
+ * An example template might look like the following:
+ * <pre>
+ * <div class="comment">
+ *   <div class="comment-header">
+ *    <a class="comment-avatar"
+ *       ng-href="{{comment.profileUrl}}">
+ *      <img ng-src="{{comment.avatarUrl}}"
+ *           alt="{{comment.name}}" />
+ *    </a>
+ *    <a class="comment-username"
+ *       ng-href="{{comment.profileUrl}}"
+ *       title="{{comment.username}}">{{comment.name}}</a>
+ *     <span class="comment-date">{{comment.date | timeAgo}}</span>
+ *   </div>
+ *   <div class="comment-body" ng-bind="comment.text"></div>
+ *   <div comments-transclude></div>
+ * </div>
+ * </pre>
+ */
+.directive('commentsTransclude', function() {
+  return {
+    restrict: 'EA',
+    require: '^comment',
+    link: {
+      pre: function(scope, element, attr, comment) {
+        comment.commentsTransclude = element;
+      }
     }
   };
 });
