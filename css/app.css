@@ -16,16 +16,13 @@ body {
   margin-left: 2em;  
 }
 
-.comment-header > h4 {
-  line-height: 2em;
-  height: 2em;
-  display: block;
+.comment-header {
   vertical-align: middle;
+  line-height: 2em;
 }
 
-.comment-header > h4 > button {
-  position: relative;
-  top: -.125em;
+.comment-header > h4 {
+  display: inline;
 }
 
 .comment > .page-header {
@@ -73,14 +70,19 @@ body {
 }
 
 .comment {
-  position: relative;
+  border-top: 1px solid #eee;
+}
+
+.comment:first-child {
+  border: none;
 }
 
 
 .clear-square {
+  vertical-align: sub;
   border: none;
   background: none;
-  display: block;
-  float: left;
   outline: none;
+  min-width: 36px;
+  min-height: 34px;
 }

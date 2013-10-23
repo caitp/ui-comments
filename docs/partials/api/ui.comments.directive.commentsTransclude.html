@@ -1,0 +1,42 @@
+<h1><code ng:non-bindable="">commentsTransclude</code>
+<span class="hint">(directive in module <code ng:non-bindable="">ui.comments</code>
+)</span>
+</h1>
+<div><h2 id="Description">Description</h2>
+<div class="description"><p>This directive is a helper which allows a user to specify in a
+<a href="#/api/ui.comments.directive:comment">comment</a> template where they wish child comments to be
+inserted.</p>
+
+<p>If this directive is not used, then the child comments are merely appended to the end of a
+comment template, which is the behaviour of the default templates.</p>
+
+<p>It is not a literal transclusion, and so any class names or categories are completely ignored.
+Instead, the element is replaced by a <a href="#/api/ui.comments.directive:comments">comments</a> collection
+when comments are available.</p>
+
+<p>An example template might look like the following:
+<pre class="prettyprint linenums">
+&lt;div class="comment"&gt;
+  &lt;div class="comment-header"&gt;
+   &lt;a class="comment-avatar"
+      ng-href="{{comment.profileUrl}}"&gt;
+     &lt;img ng-src="{{comment.avatarUrl}}"
+          alt="{{comment.name}}" /&gt;
+   &lt;/a&gt;
+   &lt;a class="comment-username"
+      ng-href="{{comment.profileUrl}}"
+      title="{{comment.username}}"&gt;{{comment.name}}&lt;/a&gt;
+    &lt;span class="comment-date"&gt;{{comment.date | timeAgo}}&lt;/span&gt;
+  &lt;/div&gt;
+  &lt;div class="comment-body" ng-bind="comment.text"&gt;&lt;/div&gt;
+  &lt;div comments-transclude&gt;&lt;/div&gt;
+&lt;/div&gt;
+</pre></div>
+<h2 id="Usage">Usage</h2>
+<div class="usage">as element:<pre class="prettyprint linenums">&lt;comments-transclude&gt;
+&lt;/comments-transclude&gt;</pre>
+as attribute<pre class="prettyprint linenums">&lt;div comments-transclude&gt;
+   ...
+&lt;/div&gt;</pre>
+</div>
+</div>
