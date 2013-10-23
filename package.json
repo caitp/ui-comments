@@ -1,6 +1,6 @@
 {
   "name": "ui-comments",
-  "version": "0.1.0-SNAPSHOT",
+  "version": "0.1.0",
   "description": "Nested, Reddit-style comments directives for AngularJS",
   "main": "index.js",
   "scripts": {

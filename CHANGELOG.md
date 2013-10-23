@@ -1,3 +1,11 @@
+<a name="v0.1.0"></a>
+## v0.1.0 (2013-10-22)
+
+
+#### Features
+
+* **comments:** directive to define insert nested comments in template ([4c796ccc](http://github.com/caitp/ui-comments/commit/4c796ccca6ebaf7484ab7034a40138756d183cb5))
+
 <a name="v0.0.10"></a>
 ### v0.0.10 (2013-10-22)
 
