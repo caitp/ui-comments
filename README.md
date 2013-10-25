@@ -23,19 +23,19 @@ The above commands will install development dependencies for the library, and ru
 
 If desired, it is possible to manually run tests with specific browsers:
 
-1. Start the test server:
+- 1) Start the test server:
 
 ```bash
 $ karma start --browsers PhantomJS [--browsers Chrome [--browsers Firefox]]
 ```
 
-2. After the server and desired browsers are started up, run the tests:
+- 2) After the server and desired browsers are started up, run the tests:
 
 ```bash
 $ karma run
 ```
 
-3. Alternatively, you can utilize `--single-run` to start the server, execute tests and quit immediately:
+- 3) Alternatively, you can utilize `--single-run` to start the server, execute tests and quit immediately:
 
 ```bash
 $ karma start [desired --browsers] --single-run
@@ -50,8 +50,8 @@ Note that it is nice to have a global installation of `karma`, however if this i
 It would be super cool if this project is actually useful to people, and I know that for what it is currently, there are a lot of things that could be improved on, which I'm not totally sure how to do in a nice way.
 
 - Simpler template customization
+- Improved documentation
 - Service API for server communication
-- Demo site
 - More robust testing
 
 So there are lots of things to do, and it would be just awesome if people could help improve them. But, even if people only ever use it as an example for generating nested AngularJS directives, that's fine too. I really just wrote this for fun, but I hope that people can get some use out of it as well.
