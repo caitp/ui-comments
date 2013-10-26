@@ -1,3 +1,11 @@
+<a name="v0.1.2"></a>
+### v0.1.2 (2013-10-25)
+
+
+#### Bug Fixes
+
+* **travis:** install karma@v0.10.2 due to broken v0.10.3 ([dc995dc7](http://github.com/caitp/ui-comments/commit/dc995dc70fe0b09c1a8bb106e9bd2f092a998ca3))
+
 <a name="v0.1.1"></a>
 ### v0.1.1 (2013-10-23)
 
