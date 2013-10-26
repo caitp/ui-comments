@@ -248,7 +248,7 @@ angular.module('commentsDemo', ['ngRoute', 'ngSanitize', 'views/comments.html', 
       author: '@' + item.data.author,
       profileUrl: 'http://www.reddit.com/user/' + item.data.author + '/',
       score: item.data.score,
-      thumbnail: item.data.thumbnail,
+      thumbnail: (item.data.thumbnail !== "self" && item.data.thumbnail) || undefined,
       title: item.data.title,
       url: item.data.url,
       id: item.data.id,
@@ -294,7 +294,7 @@ angular.module('commentsDemo', ['ngRoute', 'ngSanitize', 'views/comments.html', 
             url: article ? article.url : "#",
             title: article.title || "Invalid article",
             selftext: article && unescape(article.selftext_html, $sanitize),
-            thumbnail: article.thumbnail,
+            thumbnail: (article.thumbnail !== "self" && article.thumbnail) || undefined,
             id: article.id
           };
 
