@@ -7,13 +7,13 @@ body {
 }
 
 .comment {
-  padding: .25em;
   margin: .25em;
 }
 
 .comment > .comments {
   margin-top: 1em;
-  margin-left: 2em;  
+  margin-left: 2em;
+  margin-bottom: 1em;
 }
 
 .comment-header {
@@ -68,15 +68,6 @@ body {
     border-top: 1px solid rgba(255,255,255,0.3);
     border-bottom: 1px solid rgba(221,221,221,0.3);
 }
-
-.comment {
-  border-top: 1px solid #eee;
-}
-
-.comment:first-child {
-  border: none;
-}
-
 
 .clear-square {
   vertical-align: sub;

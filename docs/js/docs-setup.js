@@ -39,6 +39,6 @@ NG_DOCS={
   "startPage": "/api",
   "scripts": [
     "angular.min.js",
-    "ui-comments-0.1.2.js"
+    "ui-comments-0.1.3-SNAPSHOT.js"
   ]
 };
