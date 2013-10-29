@@ -6,6 +6,35 @@
     <link rel="stylesheet" href="css/font-awesome.min.css">
     <link rel="stylesheet" href="css/app.css">
   </head>
+  <script type="text/ng-template" id="views/comment.html">
+  <div class="panel panel-default comment">
+    <div class="panel-heading comment-header">
+      <button ng-if="comment.children" class="icon-2x clear-square glyphicon"
+              ng-class="{'icon-minus-sign-alt': !collapsed, 'icon-plus-sign-alt': collapsed}"
+              title="toggle children" ng-click="collapse()"></button>
+      <button ng-if="!comment.children" class="icon-2x clear-square"></button>
+      <h4 class="comment-user">
+        <span class="comment-username" ng-if="!comment.profileUrl">{{comment.name}}</span>
+        <a class="comment-username" ng-if="comment.profileUrl" ng-href="{{comment.profileUrl}}"
+                 title="{{comment.name}}">{{comment.name}}</a>
+        <small class="comment-date" ng-if="comment.date" title="{{comment.date | calendar}}">
+          {{comment.date | timeago}}
+        </small>
+      </h4>
+      <img class="comment-avatar" ng-if="comment.avatarUrl" ng-src="{{comment.avatarUrl}}"
+           alt="{{comment.name}}" />
+    </div>
+    <div class="comment-body panel-body" ng-bind-html="comment.text"></div>
+    <div comments-transclude></div>
+  </div>
+  </script>
+
+  <script type="text/ng-template" id="views/comments.html">
+  <div class="comments">
+    <comment ng-repeat="comment in comments" comment-data="comment"></comment>
+  </div>
+  </script>
+  
   <body ng-controller="DemoCtrl">
     <header>
       <nav id="navbar" class="navbar navbar-inverse navbar-fixed-top">

@@ -4,41 +4,7 @@ function unescape(html, $sanitize) {
   return $sanitize ? $sanitize(html) : html;
 }
 
-angular.module("views/comment.html", []).run(["$templateCache", function($templateCache) {
-  $templateCache.put("views/comment.html",
-    "<div class=\"container comment\">\n" +
-    "  <div class=\"page-header\">\n" +
-    "    <div class=\"comment-header\">\n" +
-    "      <button ng-if=\"comment.children\" class=\"icon-2x clear-square glyphicon\" " +
-    "              ng-class=\"{'icon-minus-sign-alt': !collapsed, 'icon-plus-sign-alt': collapsed}\" " + 
-    "              title=\"toggle children\" ng-click=\"collapse()\"></button>" +
-    "      <button ng-if=\"!comment.children\" class=\"icon-2x clear-square\"></button>" +
-    "      <h4 class=\"comment-user\">\n" +
-    "        <span class=\"comment-username\" ng-if=\"!comment.profileUrl\">{{comment.name}}</span>\n" +
-    "        <a class=\"comment-username\" ng-if=\"comment.profileUrl\" ng-href=\"{{comment.profileUrl}}\" " +
-    "           title=\"{{comment.name}}\">{{comment.name}}</a>\n" +
-    "        <small class=\"comment-date\" ng-if=\"comment.date\" title=\"{{comment.date | calendar}}\">" +
-    "          {{comment.date | timeago}}" +
-    "        </small>\n" +
-    "      </h4>\n" +
-    "      <img class=\"comment-avatar\" ng-if=\"comment.avatarUrl\" ng-src=\"{{comment.avatarUrl}}\" " +
-    "           alt=\"{{comment.name}}\" />\n" +
-    "    </div>\n" +
-    "  </div>\n" +
-    "  <div class=\"comment-body\" ng-bind-html=\"comment.text\"></div>" +
-    "  <div comments-transclude></div>" +
-    "</div>");
-}]);
-
-angular.module("views/comments.html", []).run(["$templateCache", function($templateCache) {
-  $templateCache.put("views/comments.html",
-    "<div class=\"comments panel panel-default\">\n" +
-    "  <comment ng-repeat=\"comment in comments\" comment-data=\"comment\"></comment>\n" +
-    "</div>\n" +
-    "");
-}]);
-
-angular.module('commentsDemo', ['ngRoute', 'ngSanitize', 'views/comments.html', 'views/comment.html', 'ui.comments'])
+angular.module('commentsDemo', ['ngRoute', 'ngSanitize', 'ui.comments'])
 .config(function($rootScopeProvider, $sceDelegateProvider) {
   //$rootScopeProvider.digestTtl(100);
   $sceDelegateProvider.resourceUrlWhitelist([
