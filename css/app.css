@@ -74,6 +74,14 @@ body {
   padding-top: 16px;
 }
 
+a>.text {
+  display: none;
+}
+
+.in a>.text, .collapsing a>.text {
+  display: inline;
+}
+
 .clear-square {
   vertical-align: sub;
   border: none;
