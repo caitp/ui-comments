@@ -289,7 +289,7 @@ angular.module('commentsDemo', ['ngRoute', 'ngSanitize', 'ui.comments'])
   angular.extend($scope, article);
   $rootScope.demo = false;
   $rootScope.reddit = false;
-  $rootScope.subreddit = article.subreddit;
+  $rootScope.subreddit = 'r/' + article.subreddit;
   $rootScope.article = article.id;
 })
 
