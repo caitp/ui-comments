@@ -89,8 +89,8 @@
         <ul class="nav nav-pills">
           <li ng-class="{active: demo}"><a ng-href="{{baseUrl}}">Demo</a></li>
           <li ng-class="{active: reddit}"><a ng-href="{{baseUrl + '#/r'}}">Reddit</a></li>
-          <li ng-if="subreddit" ng-class="{active: subreddit && !article}"><a ng-href="{{baseUrl + '#/r/' + subreddit}}">{{subreddit || 'Subreddit' }}</a></li>
-          <li ng-if="article" ng-class="{active: article}"><a ng-href="{{baseUrl + '#/r/' + subreddit + '/' + article}}">{{article || 'Article' }}</a></li>
+          <li ng-if="subreddit" ng-class="{active: subreddit && !article}"><a ng-href="{{baseUrl + '#/' + subreddit}}">{{subreddit || 'Subreddit' }}</a></li>
+          <li ng-if="article" ng-class="{active: article}"><a ng-href="{{baseUrl + '#/' + subreddit + '/' + article}}">{{article || 'Article' }}</a></li>
         </ul>
       </div>
       <div ng-view>
