@@ -85,7 +85,21 @@ angular.module('ui.comments.directive', [])
      * or by array notation.
      *
      */
-    commentController: undefined
+    commentController: undefined,
+    /**
+     * @ngdoc property
+     * @name ui.comments.commentsConfig#depthLimit
+     * @propertyOf ui.comments.commentsConfig
+     *
+     * @description
+     *
+     * Default maximum depth of comments to display in a comments collection. When the depth
+     * limit is exceeded, no further child comments collections shall be created.
+     *
+     * The depth limit may also be specified via the `comment-depth-limit` attribute for the
+     * {@link ui.comments.directive:comments comments} directive.
+     */
+    depthLimit: 5
   };
   var emptyController = function() {};
   function stringSetter(setting, value) {
@@ -102,12 +116,18 @@ angular.module('ui.comments.directive', [])
       config[setting] = emptyController;
     }
   }
+  function numberSetter(setting, value) {
+    if (typeof value === 'number') {
+      config[setting] = value;
+    }
+  }
   
   var setters = {
     'containerTemplate': stringSetter,
     'commentTemplate': stringSetter,
     'orderBy': stringSetter,
-    'commentController': controllerSetter
+    'commentController': controllerSetter,
+    'depthLimit': numberSetter
   };
   this.$get = function() {
     return config;
@@ -165,6 +185,8 @@ angular.module('ui.comments.directive', [])
  *
  * @param {expression} comment-data Data model containing a collection of comments.
  * @param {string} order-by Override the default orderBy value.
+ * @param {number} comment-depth-limit The maximum depth of nested comments tree to display.
+ *   default: 5
  *
  * @description
  *
@@ -189,10 +211,10 @@ angular.module('ui.comments.directive', [])
  * </div>
  * </pre>
  */
-.directive('comments', function($compile, commentsConfig) {
+.directive('comments', function($compile, $interpolate, commentsConfig) {
   return {
     restrict: 'EA',
-    require: ['?^comment'],
+    require: '?^comment',
     transclude: true,
     replace: true,
     templateUrl: function() { return commentsConfig.containerTemplate; },
@@ -201,10 +223,42 @@ angular.module('ui.comments.directive', [])
     },
     controller: function() {},
     compile: function() {
-      return function(scope, elem, attr, ctrl) {
-        attr.$observe('orderBy', function(newval, oldval) {
-          scope.commentOrder = newval || commentsConfig.orderBy;
-        });
+      return {
+        pre: function(scope, elem, attr, ctrl) {
+          var parentCollection = ctrl ? elem.parent().inheritedData('$commentsController') : null,
+              self = elem.data('$commentsController');
+
+          // Setup $commentsController
+          if (parentCollection) {
+            self.commentsDepth = parentCollection.commentsDepth + 1;
+            self.commentsRoot = parentCollection.commentsRoot;
+            self.commentsParent = parentCollection;
+          } else {
+            self.commentsDepth = 1;
+            self.commentsRoot = self;
+            var depthLimit = angular.isDefined(attr.commentDepthLimit) ?
+                             attr.commentDepthLimit :
+                             commentsConfig.depthLimit;
+            if (typeof depthLimit === 'string') {
+              depthLimit = $interpolate(depthLimit, false)(scope.$parent);
+              if (typeof depthLimit === 'string') {
+                depthLimit = parseInt(depthLimit, 10);
+              }
+            }
+
+            if (typeof depthLimit !== 'number' || depthLimit !== depthLimit) {
+              // Avoid NaN and non-numbers
+              depthLimit = 0;
+            }
+
+            self.commentsDepthLimit = depthLimit;
+          }
+
+          scope.commentsDepth = self.commentsDepth;
+          attr.$observe('orderBy', function(newval, oldval) {
+            scope.commentOrder = newval || commentsConfig.orderBy;
+          });
+        }
       };
     }
   };
@@ -268,6 +322,10 @@ angular.module('ui.comments.directive', [])
       return function(scope, elem, attr, ctrls) {
         var comments = ctrls[0], comment = ctrls[1];
         var controller = commentsConfig.commentController, controllerInstance;
+
+        scope.commentDepth = comments.commentsDepth;
+        scope.commentDepthLimit = comments.commentsRoot.commentsDepthLimit;
+
         if (controller) {
           controllerInstance = $controller(controller, {
             '$scope': scope,
@@ -281,8 +339,7 @@ angular.module('ui.comments.directive', [])
           elem.addClass('child-comment');
         }
         var children = false, compiled,
-            sub = angular.element('<comments child-comments="true" ' +
-                        'comment-data="comment.children"></comments>'),
+            sub = '<comments child-comments="true" comment-data="comment.children"></comments>',
             transclude;
         // Notify controller without bubbling
         function notify(scope, name, data) {
@@ -309,6 +366,10 @@ angular.module('ui.comments.directive', [])
             data = [];
           }
           if (data.length > 0 && !children) {
+            if (comments.commentsDepth >= comments.commentsRoot.commentsDepthLimit) {
+              notify(scope, '$depthLimitComments', scope.comment);
+              return;
+            }
             compiled = $compile(sub)(scope);
             if (comment.commentsTransclude) {
               transclude = comment.commentsTransclude.clone(true);

@@ -135,11 +135,35 @@ describe('ui.comments', function() {
         expect(children.find('.comment-body > div').first().text()).toEqual('Second child');
       });
     });
+
+
+    describe('depth limit', function() {
+      beforeEach(function() {
+        $scope.comments = [{
+          text: 'Comment level 1',
+          children: [
+            { text: 'First child' },
+            { text: 'Second child' }
+          ]
+        }];
+        $scope.depth = 1;
+      });
+
+
+      it('prevents creation of child comments when exceeded', function() {
+        comments = $compile('<comments comment-depth-limit="{{depth}}" ' +
+                            'comment-data="comments"></comments>')($scope);
+        $scope.$digest();
+        expect(comments.find('.comment').length).toEqual(1);
+      });
+    })
   });
 
 
   describe('events', function() {
+    var config;
 		beforeEach(inject(function(commentsConfig) {
+      config = commentsConfig;
 			commentsConfig.commentController = 'TestCtrl1';
 		}));
     it('fires `$filledNestedComments` when child comments become available', function() {
@@ -170,6 +194,20 @@ describe('ui.comments', function() {
 			expect(comments.find('.comment .comments-transclude').first().length).toEqual(1);
 			expect(callback.mostRecentCall.args[0]).toHaveClass('comments-transclude');
 			expect(callback.mostRecentCall.args[0].children().length).toEqual(0);
+    });
+
+
+    it('fires `$depthLimitComments` when the level of child comments exceeds the depth limit', function() {
+      config.depthLimit = 1;
+      $scope.comments = [{children: []}];
+      comments = $compile('<comments comment-data="comments"></comments>')($scope);
+      $scope.$digest();
+      var scope = firstCtrl().$scope,
+          callback = jasmine.createSpy('depthLimitHit');
+      scope.$on('$depthLimitComments', callback);
+      $scope.comments[0].children = [{}];
+      $scope.$digest();
+      expect(callback).toHaveBeenCalled();
     });
   });
 
