@@ -241,6 +241,13 @@ module.exports = function(grunt) {
           base: '<%= dist %>/docs',
           keepalive: true
         }
+      },
+      dev: {
+        options: {
+          port: process.env.PORT || '3000',
+          base: '<%= dist %>',
+          keepalive: true
+        }
       }
     },
     clean: {
