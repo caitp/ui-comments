@@ -20,7 +20,8 @@ angular.module('commentsDemo', ['ngRoute', 'ngSanitize', 'ui.comments'])
   commentsConfigProvider.set({
     containerTemplate: 'views/comments.html',
     commentTemplate: 'views/comment.html',
-    commentController: 'CommentCtrl'
+    commentController: 'CommentCtrl',
+    depthLimit: 10
   });
 })
 

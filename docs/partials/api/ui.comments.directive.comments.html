@@ -28,11 +28,13 @@ the following:</p>
 <h2 id="Usage">Usage</h2>
 <div class="usage">as element:<pre class="prettyprint linenums">&lt;comments
        comment-data="{expression}"
-       order-by="{string}"&gt;
+       order-by="{string}"
+       comment-depth-limit="{number}"&gt;
 &lt;/comments&gt;</pre>
 as attribute<pre class="prettyprint linenums">&lt;div comments
      comment-data="{expression}"
-     order-by="{string}"&gt;
+     order-by="{string}"
+     comment-depth-limit="{number}"&gt;
    ...
 &lt;/div&gt;</pre>
 <h3 id="Directive.info">Directive info</h3>
@@ -44,6 +46,9 @@ as attribute<pre class="prettyprint linenums">&lt;div comments
 <p>Data model containing a collection of comments.</p></li>
 <li><code ng:non-bindable="">order-by – {string} – </code>
 <p>Override the default orderBy value.</p></li>
+<li><code ng:non-bindable="">comment-depth-limit – {number} – </code>
+<p>The maximum depth of nested comments tree to display.
+default: 5</p></li>
 </ul>
 </div>
 </div>

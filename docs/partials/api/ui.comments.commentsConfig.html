@@ -66,6 +66,13 @@ Currently, these are simply appended to the body of the comment.</p></div>
 <div class="containertemplate"><p>The template URL for collections of comments. Support for inline templates is not yet
 available, and so this must be a valid URL or cached ng-template</p></div>
 </li>
+<li><h3 id="depthLimit">depthLimit</h3>
+<div class="depthlimit"><p>Default maximum depth of comments to display in a comments collection. When the depth
+limit is exceeded, no further child comments collections shall be created.</p>
+
+<p>The depth limit may also be specified via the <code>comment-depth-limit</code> attribute for the
+<a href="#/api/ui.comments.directive:comments">comments</a> directive.</p></div>
+</li>
 <li><h3 id="orderBy">orderBy</h3>
 <div class="orderby"><p>Presently, this configuration item is not actually used.</p>
 
