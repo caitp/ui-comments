@@ -202,7 +202,7 @@ angular.module('commentsDemo', ['ngRoute', 'ngSanitize', 'ui.comments'])
   $scope.subreddit = 'r/' + about.data.display_name;
   $scope.description = about.data.public_description || about.data.description || "";
   var articles = subreddit && subreddit.data && subreddit.data.children && subreddit.data.children,
-      badthumbs = /^(self|default)$/i;
+      badthumbs = /^(self|default|nsfw)$/i;
   $scope.articles = $.map(articles, mapArticles) || [];
 
   $rootScope.demo = false;
