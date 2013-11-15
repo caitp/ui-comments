@@ -336,7 +336,7 @@ angular.module('ui.comments.directive', [])
         elem.addClass('child-comment');
       }
       var children = false, compiled,
-          sub = '<comments child-comments="true" comment-data="comment.children"></comments>',
+          sub = '<div comments child-comments="true" comment-data="comment.children"></div>',
           transclude;
       // Notify controller without bubbling
       function notify(scope, name, data) {
@@ -375,12 +375,7 @@ angular.module('ui.comments.directive', [])
             elem.append(compiled);
           }
           children = true;
-          var w = scope.$watch(function() { return compiled.children().length; }, function(val) {
-            if (val >= data.length) {
-              w();
-              notify(scope, '$filledNestedComments', compiled);
-            }
-          });
+          notify(scope, '$filledNestedComments', compiled);
         } else if(!data.length && children) {
           children = false;
           if (comment.commentsTransclude && transclude) {

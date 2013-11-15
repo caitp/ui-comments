@@ -29,13 +29,15 @@ angular.module('commentsDemo', ['ngRoute', 'ngSanitize', 'ui.comments'])
   var children;
   $scope.collapsed = true;
   $scope.$on('$filledNestedComments', function(nodes) {
-    children = nodes;
-    children.collapse('hide');
-    // This is a really stupid hack, Angular really needs to provide a better
-    // way to do this sort of thing :(
+    $scope.collapsed = true;
     $timeout(function() {
-      children.collapse('hide');
-    }, 500);
+      children = nodes;
+      children.addClass('collapse').removeClass('in');
+      children.collapse({
+        toggle: false
+      });
+      // Stupid hack to wait for DOM insertion prior to setting up plugin
+    }, 100);
   });
   $scope.$on('$emptiedNestedComments', function(nodes) {
     children = undefined;
