@@ -77,35 +77,33 @@ angular.module('ui.comments.directive', []).provider('commentsConfig', function 
       scope: { 'comments': '=commentData' },
       controller: function () {
       },
-      compile: function () {
-        return {
-          pre: function (scope, elem, attr, ctrl) {
-            var parentCollection = ctrl ? elem.parent().inheritedData('$commentsController') : null, self = elem.data('$commentsController');
-            if (parentCollection) {
-              self.commentsDepth = parentCollection.commentsDepth + 1;
-              self.commentsRoot = parentCollection.commentsRoot;
-              self.commentsParent = parentCollection;
-            } else {
-              self.commentsDepth = 1;
-              self.commentsRoot = self;
-              var depthLimit = angular.isDefined(attr.commentDepthLimit) ? attr.commentDepthLimit : commentsConfig.depthLimit;
+      link: {
+        pre: function (scope, elem, attr, ctrl) {
+          var parentCollection = ctrl ? elem.parent().inheritedData('$commentsController') : null, self = elem.data('$commentsController');
+          if (parentCollection) {
+            self.commentsDepth = parentCollection.commentsDepth + 1;
+            self.commentsRoot = parentCollection.commentsRoot;
+            self.commentsParent = parentCollection;
+          } else {
+            self.commentsDepth = 1;
+            self.commentsRoot = self;
+            var depthLimit = angular.isDefined(attr.commentDepthLimit) ? attr.commentDepthLimit : commentsConfig.depthLimit;
+            if (typeof depthLimit === 'string') {
+              depthLimit = $interpolate(depthLimit, false)(scope.$parent);
               if (typeof depthLimit === 'string') {
-                depthLimit = $interpolate(depthLimit, false)(scope.$parent);
-                if (typeof depthLimit === 'string') {
-                  depthLimit = parseInt(depthLimit, 10);
-                }
+                depthLimit = parseInt(depthLimit, 10);
               }
-              if (typeof depthLimit !== 'number' || depthLimit !== depthLimit) {
-                depthLimit = 0;
-              }
-              self.commentsDepthLimit = depthLimit;
             }
-            scope.commentsDepth = self.commentsDepth;
-            attr.$observe('orderBy', function (newval, oldval) {
-              scope.commentOrder = newval || commentsConfig.orderBy;
-            });
+            if (typeof depthLimit !== 'number' || depthLimit !== depthLimit) {
+              depthLimit = 0;
+            }
+            self.commentsDepthLimit = depthLimit;
           }
-        };
+          scope.commentsDepth = self.commentsDepth;
+          attr.$observe('orderBy', function (newval, oldval) {
+            scope.commentOrder = newval || commentsConfig.orderBy;
+          });
+        }
       }
     };
   }
@@ -133,84 +131,75 @@ angular.module('ui.comments.directive', []).provider('commentsConfig', function 
         function ($scope) {
         }
       ],
-      compile: function (scope, elem) {
-        return function (scope, elem, attr, ctrls) {
-          var comments = ctrls[0], comment = ctrls[1];
-          var controller = commentsConfig.commentController, controllerInstance;
-          scope.commentDepth = comments.commentsDepth;
-          scope.commentDepthLimit = comments.commentsRoot.commentsDepthLimit;
-          if (controller) {
-            controllerInstance = $controller(controller, {
-              '$scope': scope,
-              '$element': elem
-            });
-            if (controllerInstance) {
-              elem.data('$CommentController', controllerInstance);
+      link: function (scope, elem, attr, ctrls) {
+        var comments = ctrls[0], comment = ctrls[1];
+        var controller = commentsConfig.commentController, controllerInstance;
+        scope.commentDepth = comments.commentsDepth;
+        scope.commentDepthLimit = comments.commentsRoot.commentsDepthLimit;
+        if (controller) {
+          controllerInstance = $controller(controller, {
+            '$scope': scope,
+            '$element': elem
+          });
+          if (controllerInstance) {
+            elem.data('$CommentController', controllerInstance);
+          }
+        }
+        if (elem.parent().attr('child-comments') === 'true') {
+          elem.addClass('child-comment');
+        }
+        var children = false, compiled, sub = '<div comments child-comments="true" comment-data="comment.children"></div>', transclude;
+        function notify(scope, name, data) {
+          if (!controllerInstance) {
+            return;
+          }
+          var namedListeners = scope.$$listeners[name] || [], i, length, args = [data];
+          for (i = 0, length = namedListeners.length; i < length; i++) {
+            if (!namedListeners[i]) {
+              namedListeners.splice(i, 1);
+              i--;
+              length--;
+              continue;
+            }
+            try {
+              namedListeners[i].apply(null, args);
+            } catch (e) {
+              $exceptionHandler(e);
             }
           }
-          if (elem.parent().attr('child-comments') === 'true') {
-            elem.addClass('child-comment');
+        }
+        function update(data) {
+          if (!angular.isArray(data)) {
+            data = [];
           }
-          var children = false, compiled, sub = '<comments child-comments="true" comment-data="comment.children"></comments>', transclude;
-          function notify(scope, name, data) {
-            if (!controllerInstance) {
+          if (data.length > 0 && !children) {
+            if (comments.commentsDepth >= comments.commentsRoot.commentsDepthLimit) {
+              notify(scope, '$depthLimitComments', scope.comment);
               return;
             }
-            var namedListeners = scope.$$listeners[name] || [], i, length, args = [data];
-            for (i = 0, length = namedListeners.length; i < length; i++) {
-              if (!namedListeners[i]) {
-                namedListeners.splice(i, 1);
-                i--;
-                length--;
-                continue;
-              }
-              try {
-                namedListeners[i].apply(null, args);
-              } catch (e) {
-                $exceptionHandler(e);
-              }
+            compiled = $compile(sub)(scope);
+            if (comment.commentsTransclude) {
+              transclude = comment.commentsTransclude.clone(true);
+              comment.commentsTransclude.replaceWith(compiled);
+            } else {
+              elem.append(compiled);
             }
+            children = true;
+            notify(scope, '$filledNestedComments', compiled);
+          } else if (!data.length && children) {
+            children = false;
+            if (comment.commentsTransclude && transclude) {
+              compiled.replaceWith(transclude);
+            } else {
+              compiled.remove();
+            }
+            notify(scope, '$emptiedNestedComments', comment.commentsTransclude || elem);
+            transclude = compiled = undefined;
           }
-          function update(data) {
-            if (!angular.isArray(data)) {
-              data = [];
-            }
-            if (data.length > 0 && !children) {
-              if (comments.commentsDepth >= comments.commentsRoot.commentsDepthLimit) {
-                notify(scope, '$depthLimitComments', scope.comment);
-                return;
-              }
-              compiled = $compile(sub)(scope);
-              if (comment.commentsTransclude) {
-                transclude = comment.commentsTransclude.clone(true);
-                comment.commentsTransclude.replaceWith(compiled);
-              } else {
-                elem.append(compiled);
-              }
-              children = true;
-              var w = scope.$watch(function () {
-                  return compiled.children().length;
-                }, function (val) {
-                  if (val >= data.length) {
-                    w();
-                    notify(scope, '$filledNestedComments', compiled);
-                  }
-                });
-            } else if (!data.length && children) {
-              children = false;
-              if (comment.commentsTransclude && transclude) {
-                compiled.replaceWith(transclude);
-              } else {
-                compiled.remove();
-              }
-              notify(scope, '$emptiedNestedComments', comment.commentsTransclude || elem);
-              transclude = compiled = undefined;
-            }
-          }
-          scope.$watch('comment', function (newval) {
-            update(scope.comment.children);
-          }, true);
-        };
+        }
+        scope.$watch('comment', function (newval) {
+          update(scope.comment.children);
+        }, true);
       }
     };
   }
@@ -218,11 +207,9 @@ angular.module('ui.comments.directive', []).provider('commentsConfig', function 
   return {
     restrict: 'EA',
     require: '^comment',
-    link: {
-      post: function (scope, element, attr, comment) {
-        element.addClass('comments-transclude');
-        comment.commentsTransclude = element;
-      }
+    link: function (scope, element, attr, comment) {
+      element.addClass('comments-transclude');
+      comment.commentsTransclude = element;
     }
   };
 });
