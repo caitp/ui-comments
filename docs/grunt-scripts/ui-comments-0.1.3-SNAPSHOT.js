@@ -78,15 +78,15 @@ angular.module('ui.comments.directive', []).provider('commentsConfig', function 
       controller: function () {
       },
       link: {
-        pre: function (scope, elem, attr, ctrl) {
-          var parentCollection = ctrl ? elem.parent().inheritedData('$commentsController') : null, self = elem.data('$commentsController');
+        pre: function (scope, elem, attr, comment) {
+          var self = elem.controller('comments'), parentCollection = comment ? comment.comments : null;
           if (parentCollection) {
             self.commentsDepth = parentCollection.commentsDepth + 1;
             self.commentsRoot = parentCollection.commentsRoot;
             self.commentsParent = parentCollection;
           } else {
             self.commentsDepth = 1;
-            self.commentsRoot = self;
+            self.commentsRoot = null;
             var depthLimit = angular.isDefined(attr.commentDepthLimit) ? attr.commentDepthLimit : commentsConfig.depthLimit;
             if (typeof depthLimit === 'string') {
               depthLimit = $interpolate(depthLimit, false)(scope.$parent);
@@ -135,7 +135,8 @@ angular.module('ui.comments.directive', []).provider('commentsConfig', function 
         var comments = ctrls[0], comment = ctrls[1];
         var controller = commentsConfig.commentController, controllerInstance;
         scope.commentDepth = comments.commentsDepth;
-        scope.commentDepthLimit = comments.commentsRoot.commentsDepthLimit;
+        scope.commentDepthLimit = (comments.commentsRoot || comments).commentsDepthLimit;
+        comment.comments = comments;
         if (controller) {
           controllerInstance = $controller(controller, {
             '$scope': scope,
@@ -148,7 +149,7 @@ angular.module('ui.comments.directive', []).provider('commentsConfig', function 
         if (elem.parent().attr('child-comments') === 'true') {
           elem.addClass('child-comment');
         }
-        var children = false, compiled, sub = '<div comments child-comments="true" comment-data="comment.children"></div>', transclude;
+        var children = false, compiled, sub = $compile('<div comments child-comments="true" ' + 'comment-data="comment.children"></div>'), transclude;
         function notify(scope, name, data) {
           if (!controllerInstance) {
             return;
@@ -173,17 +174,18 @@ angular.module('ui.comments.directive', []).provider('commentsConfig', function 
             data = [];
           }
           if (data.length > 0 && !children) {
-            if (comments.commentsDepth >= comments.commentsRoot.commentsDepthLimit) {
+            if (comments.commentsDepth >= (comments.commentsRoot || comments).commentsDepthLimit) {
               notify(scope, '$depthLimitComments', scope.comment);
               return;
             }
-            compiled = $compile(sub)(scope);
-            if (comment.commentsTransclude) {
-              transclude = comment.commentsTransclude.clone(true);
-              comment.commentsTransclude.replaceWith(compiled);
-            } else {
-              elem.append(compiled);
-            }
+            compiled = sub(scope, function (dom) {
+              if (comment.commentsTransclude) {
+                transclude = comment.commentsTransclude.clone(true);
+                comment.commentsTransclude.replaceWith(dom);
+              } else {
+                elem.append(dom);
+              }
+            });
             children = true;
             notify(scope, '$filledNestedComments', compiled);
           } else if (!data.length && children) {
@@ -208,7 +210,7 @@ angular.module('ui.comments.directive', []).provider('commentsConfig', function 
     restrict: 'EA',
     require: '^comment',
     link: function (scope, element, attr, comment) {
-      element.addClass('comments-transclude');
+      attr.$addClass('comments-transclude');
       comment.commentsTransclude = element;
     }
   };
