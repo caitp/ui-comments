@@ -1,4 +1,5 @@
 var markdown = require('node-markdown').Markdown;
+var bower = require('bower');
 
 module.exports = function(grunt) {
 
@@ -69,6 +70,64 @@ module.exports = function(grunt) {
           src: ["**/**/*", "!**/*.html"],
           cwd: "misc/demo",
           dest: "<%= dist %>/"
+        }]
+      },
+      bower: {
+        files: [{
+          expand: true,
+          src: ["*.min.js", "*.min.js.map"],
+          cwd: "bower_components/angular",
+          dest: "<%= dist %>/js"
+        }, {
+          expand: true,
+          src: ["*.min.js", "*.min.js.map"],
+          cwd: "bower_components/angular-animate",
+          dest: "<%= dist %>/js"
+        }, {
+          expand: true,
+          src: ["*.min.js", "*.min.js.map"],
+          cwd: "bower_components/angular-route",
+          dest: "<%= dist %>/js"
+        }, {
+          expand: true,
+          src: ["*.min.js", "*.min.js.map"],
+          cwd: "bower_components/angular-sanitize",
+          dest: "<%= dist %>/js"
+        }, {
+          expand: true,
+          src: ["*.min.js", "*.min.js.map"],
+          cwd: "bower_components/bootstrap/dist/js",
+          dest: "<%= dist %>/js"
+        }, {
+          expand: true,
+          src: ["bootstrap.min.css"],
+          cwd: "bower_components/bootstrap/dist/css",
+          dest: "<%= dist %>/css"
+        }, {
+          expand: true,
+          src: ["*"],
+          cwd: "bower_components/bootstrap/dist/fonts",
+          dest: "<%= dist %>/fonts"
+        }, {
+          expand: true,
+          src: ["jquery.min.js", "jquery.min.map"],
+          cwd: "bower_components/jquery/",
+          dest: "<%= dist %>/js"
+        }, {
+          expand: true,
+          src: ["moment.min.js"],
+          cwd: "bower_components/momentjs/min",
+          dest: "<%= dist %>/js"
+        }, {
+          expand: true,
+          src: ["*.min.css"],
+          cwd: "bower_components/font-awesome/css",
+          dest: "<%= dist %>/css"
+        }, {
+          expand: true,
+          src: ["*"],
+          cwd: "bower_components/font-awesome/fonts",
+          dest: "<%= dist %>/fonts"
         }]
       }
     },
@@ -265,10 +324,10 @@ module.exports = function(grunt) {
   // Rename our watch task to 'delta', then make actual 'watch' task build 
   // things, then start test server
   grunt.renameTask('watch', 'delta');
-  grunt.registerTask('watch', ['before-test', 'after-test', 'karma:watch', 'delta']);
+  grunt.registerTask('watch', ['bower', 'before-test', 'after-test', 'karma:watch', 'delta']);
   
   // Default task.
-  grunt.registerTask('default', ['before-test', 'test', 'after-test']);
+  grunt.registerTask('default', ['bower', 'before-test', 'test', 'after-test']);
   grunt.registerTask('all', ['default']);
   
   grunt.registerTask('enforce', 'Install commit message enforce script if it doesn\'t exist',
@@ -455,6 +514,16 @@ module.exports = function(grunt) {
       grunt.config('pkg.version', self.args[0]);
     }
     grunt.task.mark().run('gh-pages');
+  });
+
+  grunt.registerTask('bower', 'Install Bower packages.', function() {
+    var done = this.async();
+    bower.commands.install()
+    .on('log', function (result) {
+      grunt.log.ok('bower: ' + result.id + ' ' + result.data.endpoint.name);
+    })
+    .on('error', grunt.fail.warn.bind(grunt.fail))
+    .on('end', done);
   });
 
   return grunt;

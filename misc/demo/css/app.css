@@ -184,3 +184,50 @@ a>.text {
 .subreddit .img {
   width: 92px;
 }
+
+.inline-block {
+  position: relative;
+  top: 0;
+}
+
+.view-container {
+  position: relative;
+}
+
+.view-container > .slider {
+  position: absolute;
+}
+
+.slider {
+  -webkit-transition: left .5s ease-in-out;
+  -moz-transition: left .5s ease-in-out;
+  -o-transition: left .5s ease-in-out;
+  transition: left .5s ease-in-out;
+}
+
+.slider.ng-enter {
+  left: 9999px;
+}
+
+.slider.ng-enter-active {
+  left: 0px;
+}
+
+.slider.ng-leave-active {
+  left: -9999px;
+}
+
+.fader.ng-enter, .fader.ng-leave {
+  -webkit-transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.5s;
+  transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.5s;
+}
+
+.fader.ng-enter,
+.fader.ng-leave.ng-leave-active {
+  opacity: 0;
+}
+
+.fader.ng-leave,
+.fader.ng-enter.ng-enter-active {
+  opacity: 1;
+}

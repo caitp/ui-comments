@@ -1,0 +1,34 @@
+{
+  "name": "ui-comments",
+  "version": "0.1.2",
+  "homepage": "https://github.com/caitp/ui-comments",
+  "authors": [
+    "Caitlin Potter <snowball@defpixel.com>"
+  ],
+  "description": "Nested, Reddit-style comments directives for AngularJS",
+  "keywords": [
+    "comments",
+    "reddit",
+    "nested",
+    "directive",
+    "angularjs"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "~1.2.6",
+    "angular-animate": "~1.2.6",
+    "angular-route": "~1.2.6",
+    "angular-sanitize": "~1.2.6",
+    "momentjs": "~2.5.0",
+    "jquery": "~2.0.3",
+    "bootstrap": "~3.0.3",
+    "font-awesome": "~4.0.3"
+  }
+}

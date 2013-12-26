@@ -4,7 +4,7 @@ function unescape(html, $sanitize) {
   return $sanitize ? $sanitize(html) : html;
 }
 
-angular.module('commentsDemo', ['ngRoute', 'ngSanitize', 'ui.comments'])
+angular.module('commentsDemo', ['ngRoute', 'ngSanitize', 'ngAnimate', 'ui.comments'])
 .config(function($rootScopeProvider, $sceDelegateProvider) {
   //$rootScopeProvider.digestTtl(100);
   $sceDelegateProvider.resourceUrlWhitelist([
@@ -37,7 +37,7 @@ angular.module('commentsDemo', ['ngRoute', 'ngSanitize', 'ui.comments'])
         toggle: false
       });
       // Stupid hack to wait for DOM insertion prior to setting up plugin
-    }, 100);
+    }, 1);
   });
   $scope.$on('$emptiedNestedComments', function(nodes) {
     children = undefined;

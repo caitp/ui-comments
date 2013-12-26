@@ -13,7 +13,6 @@
     "url": "https://github.com/caitp/ui-comments.git"
   },
   "devDependencies": {
-    "karma": "0.10.6",
     "grunt": "~0.4.1",
     "grunt-ngdocs-caitp": "~0.1.8",
     "grunt-conventional-changelog": "~1.0.0",
@@ -30,6 +29,10 @@
     "shelljs": "~0.2.6",
     "grunt-gh-pages": "~0.9.0",
     "grunt-contrib-connect": "~0.5.0",
-    "grunt-contrib-clean": "~0.5.0"
+    "grunt-contrib-clean": "~0.5.0",
+    "bower": "~1.2.8",
+    "karma-jasmine": "~0.1.5",
+    "karma-firefox-launcher": "~0.1.3",
+    "karma-phantomjs-launcher": "~0.1.1"
   }
 }
