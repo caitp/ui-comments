@@ -9,10 +9,10 @@
   <script type="text/ng-template" id="views/comment.html">
   <div class="panel panel-default comment">
     <div class="panel-heading comment-header">
-      <button ng-if="comment.children" class="icon-2x clear-square glyphicon"
-              ng-class="{'icon-minus-sign-alt': !collapsed, 'icon-plus-sign-alt': collapsed}"
+      <button ng-if="comment.children" class="fa-2x clear-square fa"
+              ng-class="{'fa-minus-square': !collapsed, 'fa-plus-square': collapsed}"
               title="toggle children" ng-click="collapse()"></button>
-      <button ng-if="!comment.children" class="icon-2x clear-square"></button>
+      <button ng-if="!comment.children" class="fa-2x fa clear-square"></button>
       <h4 class="comment-user">
         <span class="comment-username" ng-if="!comment.profileUrl">{{comment.name}}</span>
         <a class="comment-username" ng-if="comment.profileUrl" ng-href="{{comment.profileUrl}}"

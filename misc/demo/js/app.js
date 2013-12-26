@@ -37,7 +37,7 @@ angular.module('commentsDemo', ['ngRoute', 'ngSanitize', 'ui.comments'])
         toggle: false
       });
       // Stupid hack to wait for DOM insertion prior to setting up plugin
-    }, 100);
+    }, 1);
   });
   $scope.$on('$emptiedNestedComments', function(nodes) {
     children = undefined;
