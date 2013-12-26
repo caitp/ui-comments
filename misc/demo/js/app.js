@@ -4,7 +4,7 @@ function unescape(html, $sanitize) {
   return $sanitize ? $sanitize(html) : html;
 }
 
-angular.module('commentsDemo', ['ngRoute', 'ngSanitize', 'ui.comments'])
+angular.module('commentsDemo', ['ngRoute', 'ngSanitize', 'ngAnimate', 'ui.comments'])
 .config(function($rootScopeProvider, $sceDelegateProvider) {
   //$rootScopeProvider.digestTtl(100);
   $sceDelegateProvider.resourceUrlWhitelist([
