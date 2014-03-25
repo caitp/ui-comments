@@ -56,6 +56,8 @@ It would be super cool if this project is actually useful to people, and I know 
 
 So there are lots of things to do, and it would be just awesome if people could help improve them. But, even if people only ever use it as an example for generating nested AngularJS directives, that's fine too. I really just wrote this for fun, but I hope that people can get some use out of it as well.
 
+Then again, it works pretty well!
+
 ###License
 
 The MIT License (MIT)
