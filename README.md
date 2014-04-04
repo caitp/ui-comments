@@ -1,4 +1,4 @@
-##UI-Comments [![Build Status](https://travis-ci.org/caitp/ui-comments.png?branch=master)](https://travis-ci.org/caitp/ui-comments) [![devDependency Status](https://david-dm.org/caitp/ui-comments/dev-status.png?branch=master)](https://david-dm.org/caitp/ui-comments#info=devDependencies)
+##UI-Comments [![Build Status](https://travis-ci.org/caitp/ui-comments.svg?branch=master)](https://travis-ci.org/caitp/ui-comments) [![devDependency Status](https://david-dm.org/caitp/ui-comments/dev-status.png?branch=master)](https://david-dm.org/caitp/ui-comments#info=devDependencies)
 
 ###Nested, Reddit-style comments directives for AngularJS
 
