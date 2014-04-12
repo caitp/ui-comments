@@ -13,7 +13,7 @@
     "url": "https://github.com/caitp/ui-comments.git"
   },
   "devDependencies": {
-    "grunt": "~0.4.1",
+    "grunt": "~0.4.4",
     "karma": "~0.12.0",
     "grunt-ngdocs-caitp": "~0.1.8",
     "grunt-conventional-changelog": "~1.1.0",
