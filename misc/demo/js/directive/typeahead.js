@@ -13,7 +13,7 @@ function typeheadDirective(){
     },
     template: '<ul class="nav nav-pills nav-stacked" ng-hide="selected">' +
       '<li ng-repeat="item in items | filter:item track by $index" ng-click="handleSelection(item.login)" class="pointer">' +
-      '<a>{{ item.login }}</a></li>' +
+      '<img class="avatar_img" ng-src="{{ item.avatar_url }}"/> <a>{{ item.login }}</a></li>' +
       '</ul>'
   };
 }
