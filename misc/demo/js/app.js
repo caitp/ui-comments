@@ -46,6 +46,18 @@ angular.module('commentsDemo', ['ngRoute', 'ngSanitize', 'ngAnimate', 'ui.commen
     $scope.collapsed = children.hasClass('in');
     children.collapse('toggle');
   };
+
+  $scope.addChildComment = function(comment) {
+    var childComment = angular.extend(comment, {
+      name: '@'+comment.name,
+      date: new Date(),
+      profileUrl: 'https://github.com/' + comment.name
+    });
+    if(!$scope.comment.children) {
+      $scope.comment.children = [];
+    }
+    $scope.comment.children.push(childComment);
+  };
 })
 
 .config(function($routeProvider) {
@@ -124,6 +136,9 @@ angular.module('commentsDemo', ['ngRoute', 'ngSanitize', 'ngAnimate', 'ui.commen
       }]
     }]
 })
+.directive('typeahead', typeheadDirective)
+.directive('commenter', commenterDirective)
+.factory('githubService', githubService)
 
 .config(function($routeProvider) {
   var route = {
@@ -256,7 +271,7 @@ angular.module('commentsDemo', ['ngRoute', 'ngSanitize', 'ngAnimate', 'ui.commen
                          angular.isObject(comments[1].data) && comments[1].data;
           article = angular.isArray(article.children) && article.children.length && article.children[0];
           article = article.data;
-    
+
           return {
             subreddit: about.data.display_name.replace(/^\/?r\//, ''),
             description: about.data.public_description || about.data.description || "",
