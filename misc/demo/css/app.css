@@ -264,3 +264,29 @@ iframe {
   pointer-events: none;
   cursor: default;
 }
+
+.commenter-container {
+  border-top: 1px solid #ddd;
+}
+
+.form-inline .form-group {
+  position: relative;
+  display: block!important;
+  margin-bottom: 15px !important;
+}
+
+.typeahead ul {
+  width:100%;
+  position: absolute;
+  overflow: auto;
+  max-height: 300px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-top: 0px;
+  z-index: 999;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
