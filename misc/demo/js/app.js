@@ -134,7 +134,16 @@ angular.module('commentsDemo', ['ngRoute', 'ngSanitize', 'ngAnimate', 'ui.commen
           text: 'Oh, you\'ll see...',
         }]
       }]
-    }]
+    }];
+
+  $scope.addParentComment = function(comment) {
+    var parentComment = angular.extend(comment, {
+      name: '@'+comment.name,
+      date: new Date(),
+      profileUrl: 'https://github.com/' + comment.name
+    });
+    $scope.comments.push(parentComment);
+  };
 })
 .directive('typeahead', typeheadDirective)
 .directive('commenter', commenterDirective)

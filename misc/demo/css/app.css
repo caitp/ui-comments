@@ -306,3 +306,10 @@ iframe {
   background-color: rgba(173, 173, 173, 0.4)!important;
 }
 
+.add_comment .commenter-container {
+  margin-top: 20px;
+  border: 1px solid #C2C2C2;
+  border-radius: 4px;
+  background: #F0F0F0;
+}
+
