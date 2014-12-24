@@ -22,12 +22,12 @@
     "tests"
   ],
   "dependencies": {
-    "angular": "~1.2.6",
-    "angular-animate": "~1.2.6",
-    "angular-route": "~1.2.6",
-    "angular-sanitize": "~1.2.6",
+    "angular": "~1.2.8",
+    "angular-animate": "~1.2.8",
+    "angular-route": "~1.2.8",
+    "angular-sanitize": "~1.2.8",
     "momentjs": "~2.5.0",
-    "jquery": "~2.0.3",
+    "jquery": "~1.10.1",
     "bootstrap": "~3.0.3",
     "font-awesome": "~4.0.3"
   }
