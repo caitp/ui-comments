@@ -1,8 +1,8 @@
-##UI-Comments [![Build Status](https://travis-ci.org/caitp/ui-comments.svg?branch=master)](https://travis-ci.org/caitp/ui-comments) [![devDependency Status](https://david-dm.org/caitp/ui-comments/dev-status.svg)](https://david-dm.org/caitp/ui-comments#info=devDependencies)
+## UI-Comments [![Build Status](https://travis-ci.org/caitp/ui-comments.svg?branch=master)](https://travis-ci.org/caitp/ui-comments) [![devDependency Status](https://david-dm.org/caitp/ui-comments/dev-status.svg)](https://david-dm.org/caitp/ui-comments#info=devDependencies)
 
-###Nested, Reddit-style comments directives for AngularJS
+### Nested, Reddit-style comments directives for AngularJS
 
-#####[Demo](http://caitp.github.io/ui-comments/) | [Docs](http://caitp.github.io/ui-comments/docs)
+##### [Demo](http://caitp.github.io/ui-comments/) | [Docs](http://caitp.github.io/ui-comments/docs)
 
 Comments are all over the internet these days. It's often not in anyone's best interest to read them, and yet sometimes they offer a certain whimsical charm and hilarity, or otherwise engage you in pop-culture in ways that you'd otherwise miss.
 
@@ -10,7 +10,7 @@ Angular directives can make engineering comment systems very simple, and `$http`
 
 The intention of this library is to serve as a simple helper, and perhaps as an example, for a reddit-style comment system, built on two very simple AngularJS directives.
 
-###Development
+### Development
 
 Building the code is a super-simple exercise:
 
@@ -45,7 +45,7 @@ Hopefully everything is passing!
 
 Note that it is nice to have a global installation of `karma`, however if this is not available, one can use `./node_modules/grunt-karma/node_modules/karma/bin/karma` instead. That's somewhat more verbose, however!
 
-###Contributing
+### Contributing
 
 It would be super cool if this project is actually useful to people, and I know that for what it is currently, there are a lot of things that could be improved on, which I'm not totally sure how to do in a nice way.
 
@@ -58,7 +58,7 @@ So there are lots of things to do, and it would be just awesome if people could 
 
 Then again, it works pretty well!
 
-###License
+### License
 
 The MIT License (MIT)
 
